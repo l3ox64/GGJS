@@ -5,19 +5,19 @@ Make sure you have installed [nodejs](https://nodejs.org/en/download) on your ma
 
 1) Clone this repo:
     ```bash
-    `git clone https://github.com/l3ox64/GGJS`
+    git clone https://github.com/l3ox64/GGJS
 
 2) Change directory
    ```bash
-   `cd ggjs`
+   cd ggjs
 
 3) Install necessary dependency
    ```bash
-   `npm install`
+   npm install
 
 4) Run the app
    ```bash
-   `npm run start`
+   npm run start
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
