@@ -1,4 +1,20 @@
-# Getting Started with Create React App
+# Getting Started with with this App
+
+Make sure you have install [nodejs](https://nodejs.org/en/download) on your machine
+
+Clone this repo:
+### `git clone https://github.com/l3ox64/GGJS`
+
+Change directory
+### `cd ggjs`
+
+Install necessary dependency
+### `npm install`
+
+Run the app
+### `npm run start`
+
+
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
