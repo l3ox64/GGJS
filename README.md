@@ -1,20 +1,23 @@
-# Getting Started with with this App
+# Getting Started with this GGJS
 
-Make sure you have install [nodejs](https://nodejs.org/en/download) on your machine
+### Prerequisites
+Make sure you have installed [nodejs](https://nodejs.org/en/download) on your machine
 
-Clone this repo:
-### `git clone https://github.com/l3ox64/GGJS`
+1) Clone this repo:
+    ```bash
+    `git clone https://github.com/l3ox64/GGJS`
 
-Change directory
-### `cd ggjs`
+2) Change directory
+   ```bash
+   `cd ggjs`
 
-Install necessary dependency
-### `npm install`
+3) Install necessary dependency
+   ```bash
+   `npm install`
 
-Run the app
-### `npm run start`
-
-
+4) Run the app
+   ```bash
+   `npm run start`
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
