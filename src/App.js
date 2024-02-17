@@ -1,16 +1,20 @@
 import React from 'react';
-import { BrowserRouter, RouterProvider, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import LoginForm from './components/LoginForm';
+import Login from './components/Login';
+import Register from './components/Register';
+import ForgotPassword from './components/ForgotPassword';
 
-function App() {
+const App = () => {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<LoginForm/>}/>
-        <Route path="/login" element={(<><h1>Ciao Carmy! {"<3"}</h1></>)}/>
-      </Routes>
-    </BrowserRouter>
+  <Router>
+    <Routes>
+        <Route path="/" element= {<Login/>} />
+        <Route path="/login" element={<Login/>} />
+        <Route path="/register" element={<Register/>} />
+        <Route path="/forgot-password" element={<ForgotPassword/>} />
+    </Routes>
+  </Router>
   );
 }
 
