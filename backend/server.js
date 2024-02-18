@@ -7,13 +7,15 @@ const helmet = require('helmet');
 const GGUserSchema = require('./GGUserSchema');
 const app = express();
 const PORT = process.env.PORT || 3001;
+const cors = require('cors');
 
-mongoose.connect('mongodb://localhost:27017/nomedeldb', { useNewUrlParser: true, useUnifiedTopology: true });
+mongoose.connect('mongodb://localhost:27017/GGJSDB', { useNewUrlParser: true, useUnifiedTopology: true });
 
 const GGUser = mongoose.model('GGUser', GGUserSchema);
 
 app.use(bodyParser.json());
 app.use(helmet());
+app.use(cors());
 
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000,
@@ -21,11 +23,17 @@ const limiter = rateLimit({
 });
 app.use('/api/', limiter);
 
+app.use((req, res, next) => {
+  console.log(`${req.method} ${req.originalUrl}`);
+  next();
+});
+
 app.get('/api/users', async (req, res) => {
   try {
     const users = await GGUser.find();
     res.json(users);
   } catch (error) {
+    console.error(error);
     res.status(500).json({ error: error.message });
   }
 });
@@ -35,6 +43,7 @@ app.get('/api/users/:email', async (req, res) => {
     const user = await GGUser.findOne({ Email_utente: req.params.email });
     res.json(user);
   } catch (error) {
+    console.error(error);
     res.status(500).json({ error: error.message });
   }
 });
@@ -52,6 +61,7 @@ app.post('/api/users', async (req, res) => {
     const newUser = await GGUser.create({ ...req.body, Pw_utente: hashedPassword });
     res.json(newUser);
   } catch (error) {
+    console.error(error);
     res.status(500).json({ error: error.message });
   }
 });
@@ -61,6 +71,7 @@ app.put('/api/users/:email', async (req, res) => {
     const updatedUser = await GGUser.findOneAndUpdate({ Email_utente: req.params.email }, req.body, { new: true });
     res.json(updatedUser);
   } catch (error) {
+    console.error(error);
     res.status(500).json({ error: error.message });
   }
 });
@@ -70,6 +81,7 @@ app.delete('/api/users/:email', async (req, res) => {
     await GGUser.findOneAndDelete({ Email_utente: req.params.email });
     res.json({ message: 'Utente eliminato con successo.' });
   } catch (error) {
+    console.error(error);
     res.status(500).json({ error: error.message });
   }
 });
@@ -95,6 +107,7 @@ app.post('/api/register', async (req, res) => {
 
     res.json(newUser);
   } catch (error) {
+    console.error(error);
     res.status(500).json({ error: error.message });
   }
 });
@@ -115,6 +128,7 @@ app.post('/api/login', async (req, res) => {
 
     res.json({ message: 'Accesso riuscito.' });
   } catch (error) {
+    console.error(error);
     res.status(500).json({ error: error.message });
   }
 });

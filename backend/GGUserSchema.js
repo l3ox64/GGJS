@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const GGUserSchema = new mongoose.Schema({
     Email_utente: { type: String, unique: true, required: true },
     Nome_utente: { type: String, default: null },
-    CF_utente: { type: String, unique: true, default: null },
+    CF_utente: { type: String, default: null },
     Tp_sesso_utente: { type: String, enum: ['F', 'M'], default: null },
     Cognome_utente: { type: String, default: null },
     Id_area_utente: { type: Number, default: null },

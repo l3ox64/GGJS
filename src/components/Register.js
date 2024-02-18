@@ -10,6 +10,11 @@ const Register = () => {
   const [isEmailValid, setIsEmailValid] = useState(true);
   const [isPasswordSecure, setIsPasswordSecure] = useState(true);
   const [passwordsMatch, setPasswordsMatch] = useState(true);
+  const [error, setError] = useState('');
+
+  const isValidEmail = (email) => {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) && email.endsWith("@giorgimi.edu.it");
+  };
 
   const handleNameChange = (e) => {
     setName(e.target.value);
@@ -22,7 +27,7 @@ const Register = () => {
   const handleEmailChange = (e) => {
     const newEmail = e.target.value;
     setEmail(newEmail);
-    setIsEmailValid(validateEmail(newEmail));
+    setIsEmailValid(isValidEmail(newEmail));
   };
 
   const handlePasswordChange = (e) => {
@@ -38,10 +43,6 @@ const Register = () => {
     setPasswordsMatch(password === newConfirmPassword);
   };
 
-  const validateEmail = (email) => {
-    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) && email.endsWith("@giorgimi.edu.it");
-  };
-
   const validatePassword = (password) => {
     return /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*])(?=.*[a-zA-Z]).{8,}$/.test(password);
   };
@@ -50,11 +51,42 @@ const Register = () => {
     return isEmailValid && isPasswordSecure && passwordsMatch && name !== '' && surname !== '' && email !== '' && password !== '' && confirmPassword !== '';
   };
 
+  const handleRegister = async (e) => {
+    e.preventDefault();
+
+    try {
+      //verifica validita
+      if (!isValidEmail(email)) {
+        throw new Error('L\'email deve avere il dominio "@giorgimi.edu.it".');
+      }
+      const response = await fetch('http://localhost:3001/api/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          Email_utente: email,
+          Pw_utente: password,
+          Nome_utente: name,
+        }),
+      });
+
+      if (!response.ok) {
+        const errorMessage = await response.text();
+        throw new Error(errorMessage);
+      }
+      setError('');
+      window.location.href = '/main';
+    } catch (error) {
+      setError(error.message);
+    }
+  };
+
   return (
     <div className="d-flex justify-content-center">
       <div style={{ maxWidth: "300px" }}>
         <h2>Registrati</h2>
-        <Form>
+        <Form onSubmit={handleRegister}>
           <Form.Group className="mb-3" controlId="formBasicName">
             <Form.Label>Nome</Form.Label>
             <Form.Control type="text" placeholder="Inserisci il tuo nome" value={name} onChange={handleNameChange} />
@@ -86,6 +118,8 @@ const Register = () => {
           <Button variant="primary" type="submit" disabled={!isFormValid()}>
             Registrati
           </Button>
+
+          {error && <p style={{ color: 'red' }}>{error}</p>}
         </Form>
       </div>
     </div>

@@ -6,6 +6,7 @@ import Register from './components/Register';
 import ForgotPassword from './components/ForgotPassword';
 import LoginPage from './page/LoginPage';
 import { ThemeProvider } from './components/ThemeProvider';
+
 const App = () => {
   return (
   <ThemeProvider>
