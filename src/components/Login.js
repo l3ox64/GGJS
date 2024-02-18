@@ -1,12 +1,13 @@
-import React, { useState } from 'react';
-import { Form, Button } from 'react-bootstrap';
+import React, { useEffect, useState } from 'react';
+import { Form, Button, Container, Stack } from 'react-bootstrap';
 
 const Login = () => {
+  
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [isEmailValid, setIsEmailValid] = useState(true);
-
+  
   const isValidEmail = (email) => {
     // Verifica se l'email ha il dominio corretto
     return email.endsWith("@giorgimi.edu.it");
@@ -39,8 +40,10 @@ const Login = () => {
   };
 
   return (
-    <div className="d-flex justify-content-center">
-      <div style={{ maxWidth: "300px" }}>
+    <Stack className='col-md-5 mx-auto'>
+      {
+      //<div style={{ maxWidth: "300px" }}>
+      }
         <h2>Login</h2>
         <Form onSubmit={handleLogin}>
           <Form.Group className="mb-3" controlId="formBasicEmail">
@@ -75,8 +78,10 @@ const Login = () => {
         <p>
           Hai dimenticato la password? <a href="/forgot-password">Recuperala qui</a>.
         </p>
-      </div>
-    </div>
+      {
+      //</div>
+      }
+    </Stack>
   );
 };
 
