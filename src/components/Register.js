@@ -11,6 +11,8 @@ const Register = () => {
   const [isPasswordSecure, setIsPasswordSecure] = useState(true);
   const [passwordsMatch, setPasswordsMatch] = useState(true);
   const [error, setError] = useState('');
+  const [showVerification, setShowVerification] = useState(false); // Stato per mostrare/nascondere il componente di verifica
+  const [verificationCode, setVerificationCode] = useState(''); // Stato per memorizzare il codice di verifica
 
   const isValidEmail = (email) => {
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) && email.endsWith("@giorgimi.edu.it");
@@ -48,46 +50,57 @@ const Register = () => {
   };
 
   const isFormValid = () => {
-    return isEmailValid && isPasswordSecure && passwordsMatch && name !== '' && surname !== '' && email !== '' && password !== '' && confirmPassword !== '';
+    return (
+      isEmailValid &&
+      isPasswordSecure &&
+      passwordsMatch &&
+      name !== '' &&
+      surname !== '' &&
+      email !== '' &&
+      password !== '' &&
+      confirmPassword !== ''
+    );
   };
-
+  const generateVerificationCode = () => {
+    // Genera un codice di verifica casuale di 6 cifre
+    return Math.floor(100000 + Math.random() * 900000);
+  };
   const handleRegister = async (e) => {
     e.preventDefault();
 
     try {
-      //verifica validita
+      // Verifica validità email
       if (!isValidEmail(email)) {
         throw new Error('L\'email deve avere il dominio "@giorgimi.edu.it".');
       }
-      const response = await fetch('http://localhost:3001/api/register', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          Email_utente: email,
-          Pw_utente: password,
-          Nome_utente: name,
-        }),
-      });
 
-      if (!response.ok) {
-        const errorMessage = await response.text();
-        throw new Error(errorMessage);
-      }
-      setError('');
-      window.location.href = '/main';
+      // Invio del codice di verifica via email
+      const code = generateVerificationCode(); // Funzione da implementare per generare un codice casuale
+      console.log('Codice di verifica:', code); // Qui si dovrebbe implementare l'invio reale via email
+      setVerificationCode(code);
+      setShowVerification(true); // Mostra il componente di verifica
     } catch (error) {
       setError(error.message);
     }
   };
 
+  const handleVerifyCode = (e) => {
+    var enteredCode = e.target.value 
+    if (verificationCode === enteredCode) { // enteredCode è il codice inserito dall'utente
+      console.log('Email verificata con successo!');
+      // Qui puoi eseguire altre azioni dopo aver verificato l'email
+    } else {
+      setError('Il codice di verifica non è valido.');
+    }
+  };
+
   return (
     <div className="d-flex justify-content-center">
-      <div style={{ maxWidth: "300px" }}>
+      <div style={{ maxWidth: '300px' }}>
         <h2>Registrati</h2>
-        <Form onSubmit={handleRegister}>
-          <Form.Group className="mb-3" controlId="formBasicName">
+        {!showVerification ? ( // Se non è attivo il processo di verifica
+          <Form onSubmit={handleRegister}>
+             <Form.Group className="mb-3" controlId="formBasicName">
             <Form.Label>Nome</Form.Label>
             <Form.Control type="text" placeholder="Inserisci il tuo nome" value={name} onChange={handleNameChange} />
           </Form.Group>
@@ -120,7 +133,25 @@ const Register = () => {
           </Button>
 
           {error && <p style={{ color: 'red' }}>{error}</p>}
-        </Form>
+          </Form>
+        ) : (
+          // Se è attivo il processo di verifica
+          <div>
+            <Form.Group controlId="formVerificationCode">
+              <Form.Label>Codice di Verifica</Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="Inserisci il codice di verifica"
+                value={verificationCode}
+                onChange={(e) => setVerificationCode(e.target.value)}
+              />
+            </Form.Group>
+            <Button variant="primary" onClick={handleVerifyCode}>
+              Verifica
+            </Button>
+            {error && <p style={{ color: 'red' }}>{error}</p>}
+          </div>
+        )}
       </div>
     </div>
   );
