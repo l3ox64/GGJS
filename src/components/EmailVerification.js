@@ -7,14 +7,12 @@ const EmailVerification = ({ email, onSuccess }) => {
   const [attempts, setAttempts] = useState(0);
 
   const generateVerificationCode = () => {
-    // Genera un codice di verifica casuale di 6 cifre
     return Math.floor(100000 + Math.random() * 900000);
   };
 
   const handleSendVerificationCode = () => {
-    // Simulazione dell'invio del codice di verifica via email
     const code = generateVerificationCode();
-    console.log('Codice di verifica:', code); // Qui si dovrebbe implementare l'invio reale via email
+    console.log('Codice di verifica:', code); 
     setVerificationCode(code);
   };
 
@@ -23,9 +21,7 @@ const EmailVerification = ({ email, onSuccess }) => {
       setError('Inserisci il codice di verifica.');
       return;
     }
-
-    // Da implementare la verifica del codice di verifica
-    if (verificationCode === '123456') { // Simulazione la verifica del codice di verifica (codice fisso per esempio)
+    if (verificationCode === '123456') { 
       onSuccess();
     } else {
       setAttempts(attempts + 1);

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Form, Button } from 'react-bootstrap';
+import { Form, Button, Container, Row, Stack } from 'react-bootstrap';
+import axios from 'axios';;
 
 const Register = () => {
   const [name, setName] = useState('');
@@ -13,6 +14,7 @@ const Register = () => {
   const [error, setError] = useState('');
   const [showVerification, setShowVerification] = useState(false); // Stato per mostrare/nascondere il componente di verifica
   const [verificationCode, setVerificationCode] = useState(''); // Stato per memorizzare il codice di verifica
+  const [tempVerificationCode, setTempVerificationCode] = useState('');
 
   const isValidEmail = (email) => {
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) && email.endsWith("@giorgimi.edu.it");
@@ -63,7 +65,7 @@ const Register = () => {
   };
   const generateVerificationCode = () => {
     // Genera un codice di verifica casuale di 6 cifre
-    return Math.floor(100000 + Math.random() * 900000);
+    return Math.floor(100000 + Math.random() * 900000).toString();
   };
   const handleRegister = async (e) => {
     e.preventDefault();
@@ -76,7 +78,7 @@ const Register = () => {
 
       // Invio del codice di verifica via email
       const code = generateVerificationCode(); // Funzione da implementare per generare un codice casuale
-      console.log('Codice di verifica:', code); // Qui si dovrebbe implementare l'invio reale via email
+      await axios.post("http://localhost:3001/api/sendVerificationEmail", {to: email, verificationCode: code}) // Qui si dovrebbe implementare l'invio reale via email
       setVerificationCode(code);
       setShowVerification(true); // Mostra il componente di verifica
     } catch (error) {
@@ -85,8 +87,11 @@ const Register = () => {
   };
 
   const handleVerifyCode = (e) => {
-    var enteredCode = e.target.value 
-    if (verificationCode === enteredCode) { // enteredCode è il codice inserito dall'utente
+     console.log(verificationCode)
+     console.log(tempVerificationCode)
+    console.log(typeof verificationCode)
+    console.log(typeof tempVerificationCode)
+    if (verificationCode === tempVerificationCode) { // enteredCode è il codice inserito dall'utente
       console.log('Email verificata con successo!');
       // Qui puoi eseguire altre azioni dopo aver verificato l'email
     } else {
@@ -95,45 +100,52 @@ const Register = () => {
   };
 
   return (
-    <div className="d-flex justify-content-center">
-      <div style={{ maxWidth: '300px' }}>
+    <>
+    
+      <Stack>
+    
         <h2>Registrati</h2>
         {!showVerification ? ( // Se non è attivo il processo di verifica
-          <Form onSubmit={handleRegister}>
-             <Form.Group className="mb-3" controlId="formBasicName">
-            <Form.Label>Nome</Form.Label>
-            <Form.Control type="text" placeholder="Inserisci il tuo nome" value={name} onChange={handleNameChange} />
-          </Form.Group>
+        <Container>
+            <Row>
+                <Form onSubmit={handleRegister}>
+                    <Form.Group  controlId="formBasicName">
+                      <Form.Label>Nome</Form.Label>
+                      <Form.Control type="text" placeholder="Inserisci il tuo nome" value={name} onChange={handleNameChange} />
+                    </Form.Group>
+                    <Form.Group  controlId="formBasicSurname">
+                      <Form.Label>Cognome</Form.Label>
+                      <Form.Control type="text" placeholder="Inserisci il tuo cognome" value={surname} onChange={handleSurnameChange} />
+                    </Form.Group>
 
-          <Form.Group className="mb-3" controlId="formBasicSurname">
-            <Form.Label>Cognome</Form.Label>
-            <Form.Control type="text" placeholder="Inserisci il tuo cognome" value={surname} onChange={handleSurnameChange} />
-          </Form.Group>
+                    <Form.Group  controlId="formBasicEmail">
+                      <Form.Label>Email address</Form.Label>
+                      <Form.Control type="email" placeholder="Inserisci la tua email" value={email} onChange={handleEmailChange} isInvalid={!isEmailValid} />
+                      <Form.Control.Feedback type="invalid">Inserisci un'email valida che termini con @giorgimi.edu.it.</Form.Control.Feedback>
+                    </Form.Group>
 
-          <Form.Group className="mb-3" controlId="formBasicEmail">
-            <Form.Label>Email address</Form.Label>
-            <Form.Control type="email" placeholder="Inserisci la tua email" value={email} onChange={handleEmailChange} isInvalid={!isEmailValid} />
-            <Form.Control.Feedback type="invalid">Inserisci un'email valida che termini con @giorgimi.edu.it.</Form.Control.Feedback>
-          </Form.Group>
+                    <Form.Group  controlId="formBasicPassword">
+                      <Form.Label>Password</Form.Label>
+                      <Form.Control type="password" placeholder="Inserisci la tua password" value={password} onChange={handlePasswordChange} isInvalid={!isPasswordSecure} />
+                      <Form.Control.Feedback type="invalid">La password deve essere composta da almeno 8 caratteri, di cui almeno una lettera maiuscola, una minuscola, un numero e un carattere speciale.</Form.Control.Feedback>
+                    </Form.Group>
 
-          <Form.Group className="mb-3" controlId="formBasicPassword">
-            <Form.Label>Password</Form.Label>
-            <Form.Control type="password" placeholder="Inserisci la tua password" value={password} onChange={handlePasswordChange} isInvalid={!isPasswordSecure} />
-            <Form.Control.Feedback type="invalid">La password deve essere composta da almeno 8 caratteri, di cui almeno una lettera maiuscola, una minuscola, un numero e un carattere speciale.</Form.Control.Feedback>
-          </Form.Group>
+                    <Form.Group  controlId="formBasicConfirmPassword">
+                      <Form.Label>Conferma Password</Form.Label>
+                      <Form.Control type="password" placeholder="Conferma Password" value={confirmPassword} onChange={handleConfirmPasswordChange} isInvalid={!passwordsMatch} />
+                      <Form.Control.Feedback type="invalid">Le password non coincidono.</Form.Control.Feedback>
+                    </Form.Group>
 
-          <Form.Group className="mb-3" controlId="formBasicConfirmPassword">
-            <Form.Label>Conferma Password</Form.Label>
-            <Form.Control type="password" placeholder="Conferma Password" value={confirmPassword} onChange={handleConfirmPasswordChange} isInvalid={!passwordsMatch} />
-            <Form.Control.Feedback type="invalid">Le password non coincidono.</Form.Control.Feedback>
-          </Form.Group>
+                  <Button variant="primary" type="submit" disabled={!isFormValid()}>
+                    Registrati
+                  </Button>
 
-          <Button variant="primary" type="submit" disabled={!isFormValid()}>
-            Registrati
-          </Button>
-
-          {error && <p style={{ color: 'red' }}>{error}</p>}
-          </Form>
+                {error && <p style={{ color: 'red' }}>{error}</p>}
+                </Form>
+            </Row>
+      </Container>
+      
+      
         ) : (
           // Se è attivo il processo di verifica
           <div>
@@ -142,8 +154,8 @@ const Register = () => {
               <Form.Control
                 type="text"
                 placeholder="Inserisci il codice di verifica"
-                value={verificationCode}
-                onChange={(e) => setVerificationCode(e.target.value)}
+                value={tempVerificationCode}
+                onChange={(e) => setTempVerificationCode(e.target.value)}
               />
             </Form.Group>
             <Button variant="primary" onClick={handleVerifyCode}>
@@ -152,8 +164,8 @@ const Register = () => {
             {error && <p style={{ color: 'red' }}>{error}</p>}
           </div>
         )}
-      </div>
-    </div>
+      </Stack>
+    </>
   );
 };
 
