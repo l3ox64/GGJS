@@ -5,7 +5,7 @@ export default function (){
     return (
         <>
         <NavBar/>
-        <BR></BR>
+        <br/>
         <Register/>
         </>
     )

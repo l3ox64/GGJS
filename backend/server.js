@@ -9,24 +9,26 @@ const app = express();
 const PORT = process.env.PORT || 3001;
 const cors = require('cors');
 const nodemailer = require('nodemailer');
+require("dotenv").config()
+
 mongoose.connect('mongodb://localhost:27017/GGJSDB', { useNewUrlParser: true, useUnifiedTopology: true });
 
 const GGUser = mongoose.model('GGUser', GGUserSchema);
 const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
-    user: 'tuoindirizzoemail@gmail.com',
-    pass: 'tuapassword',
+    user: 'milonxva9@gmail.com',
+    pass: process.env.MAIL_AUTH,
   },
 });
 app.use(bodyParser.json());
 app.use(helmet());
 app.use(cors());
-app.post('/epi/sendVerificationEmail', (req, res) => {
+app.post('/api/sendVerificationEmail', (req, res) => {
   const { to, verificationCode } = req.body;
 
   const mailOptions = {
-    from: 'tuoindirizzoemail@gmail.com',
+    from: 'milonxva9@gmail.com',
     to: to,
     subject: 'Conferma Email',
     text: `Il tuo codice di verifica è: ${verificationCode}`,
