@@ -1,4 +1,4 @@
-# Getting Started with this GGJS
+./# Getting Started with this GGJS
 
 ### Prerequisites
 Make sure you have installed [nodejs](https://nodejs.org/en/download) on your machine
