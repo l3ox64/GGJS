@@ -24,9 +24,12 @@ const transporter = nodemailer.createTransport({
 app.use(bodyParser.json());
 app.use(helmet());
 app.use(cors());
-app.post('/api/sendVerificationEmail', (req, res) => {
+app.post('/api/sendVerificationEmail', async (req, res) => {
   const { to, verificationCode } = req.body;
-
+  const existingUser = await GGUser.findOne({ Email_utente: to });
+    if (existingUser) {
+      return res.status(400).json({ error: 'L\'email è già registrata.' });
+    }
   const mailOptions = {
     from: 'milonxva9@gmail.com',
     to: to,
@@ -117,10 +120,6 @@ app.post('/api/register', async (req, res) => {
   try {
     const { Email_utente, Pw_utente, Nome_utente, Cognome_utente } = req.body;
 
-    const existingUser = await GGUser.findOne({ Email_utente });
-    if (existingUser) {
-      return res.status(400).json({ error: 'L\'email è già registrata.' });
-    }
 
     const saltRounds = 10;
     const hashedPassword = await bcrypt.hash(Pw_utente, saltRounds);

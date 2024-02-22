@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Form, Button, Container, Row, Stack } from 'react-bootstrap';
-import axios from 'axios';;
+import axios from 'axios';
 
 const Register = () => {
   const [name, setName] = useState('');
@@ -51,6 +51,16 @@ const Register = () => {
     return /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*])(?=.*[a-zA-Z]).{8,}$/.test(password);
   };
 
+  const createAccount = async (email, pw, name, surname) => {
+    try{
+      await axios.post("http://localhost:3001/api/register", {Email_utente: email, Pw_utente: pw, Nome_utente: name, Cognome_utente: surname})
+      return {}
+    }catch(e){
+      return e
+    }
+    
+  }
+
   const isFormValid = () => {
     return (
       isEmailValid &&
@@ -78,22 +88,23 @@ const Register = () => {
 
       // Invio del codice di verifica via email
       const code = generateVerificationCode(); // Funzione da implementare per generare un codice casuale
-      await axios.post("http://localhost:3001/api/sendVerificationEmail", {to: email, verificationCode: code}) // Qui si dovrebbe implementare l'invio reale via email
+      var res = await axios.post("http://localhost:3001/api/sendVerificationEmail", {to: email, verificationCode: code}) // Qui si dovrebbe implementare l'invio reale via email
+      
       setVerificationCode(code);
       setShowVerification(true); // Mostra il componente di verifica
     } catch (error) {
-      setError(error.message);
+      setError("Mail già in uso");
     }
   };
 
-  const handleVerifyCode = (e) => {
-     console.log(verificationCode)
-     console.log(tempVerificationCode)
-    console.log(typeof verificationCode)
-    console.log(typeof tempVerificationCode)
+  const handleVerifyCode = async (e) => {
     if (verificationCode === tempVerificationCode) { // enteredCode è il codice inserito dall'utente
-      console.log('Email verificata con successo!');
-      // Qui puoi eseguire altre azioni dopo aver verificato l'email
+      createAccount(email, password, name, surname).then((res) => 
+      {
+        if(res.message) setError("C'è stato un errore") 
+        else setError("Mail creata con successo")
+      })
+      
     } else {
       setError('Il codice di verifica non è valido.');
     }

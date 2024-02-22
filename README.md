@@ -1,7 +1,7 @@
 ./# Getting Started with this GGJS
 
 ### Prerequisites
-Make sure you have installed [nodejs](https://nodejs.org/en/download) on your machine
+Make sure you have installed [nodejs](https://nodejs.org/en/download) and [mongodb](https://www.mongodb.com/try/download/community) on your machine
 
 1) Clone this repo:
     ```bash
@@ -17,7 +17,7 @@ Make sure you have installed [nodejs](https://nodejs.org/en/download) on your ma
 
 4) Run the app
    ```bash
-   npm run start
+   npm run avvia
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 

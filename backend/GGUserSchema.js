@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const GGUserSchema = new mongoose.Schema({
-    _id: { type: Number, auto: true, required: true },
+    _id: { type: mongoose.Schema.Types.ObjectId, auto: true},
     Email_utente: { type: String, unique: true, required: true },
     Nome_utente: { type: String, default: null },
     CF_utente: { type: String, default: null },
