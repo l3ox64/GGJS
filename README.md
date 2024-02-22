@@ -19,10 +19,6 @@ Make sure you have installed [nodejs](https://nodejs.org/en/download) and [mongo
    ```bash
    npm run avvia
 
-5) Run db
-   ```bash
-   node ./backend/server.js
-   
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
