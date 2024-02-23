@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Form, Button, Container, Stack } from 'react-bootstrap';
 
 const Login = () => {
@@ -6,6 +6,16 @@ const Login = () => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState(null);
   const [isEmailValid, setIsEmailValid] = useState(true);
+  const [rememberMe, setRememberMe] = useState(false); // State per "Remember Me"
+
+  // Effetto per controllare se l'utente ha già effettuato l'accesso tramite "Remember Me"
+  useEffect(() => {
+    const rememberedEmail = localStorage.getItem('rememberedEmail');
+    if (rememberedEmail) {
+      setEmail(rememberedEmail);
+      setRememberMe(true);
+    }
+  }, []);
 
   const isValidEmail = (email) => {
     return email.endsWith("@giorgimi.edu.it");
@@ -38,14 +48,20 @@ const Login = () => {
         throw new Error(responseData.error || 'Errore durante l\'accesso. Riprova.');
       }
 
-      setError(null); 
+      setError(null);
+
+      if (rememberMe) { // Se l'utente ha selezionato "Remember Me", memorizza l'email
+        localStorage.setItem('rememberedEmail', email);
+      } else { // Altrimenti rimuovi l'email memorizzata (se presente)
+        localStorage.removeItem('rememberedEmail');
+      }
+
       window.location.href = '/main';
 
     } catch (error) {
       setError(error.message);
     }
   };
-
 
   return (
     <Stack className='col-md-5 mx-auto'>
@@ -68,6 +84,10 @@ const Login = () => {
         <Form.Group className="mb-3" controlId="formBasicPassword">
           <Form.Label>Password</Form.Label>
           <Form.Control type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
+        </Form.Group>
+
+        <Form.Group className="mb-3" controlId="formBasicCheckbox">
+          <Form.Check type="checkbox" label="Remember Me" checked={rememberMe} onChange={(e) => setRememberMe(e.target.checked)} />
         </Form.Group>
 
         <Button variant="primary" type="submit">

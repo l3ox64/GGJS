@@ -6,6 +6,8 @@ import ForgotPassword from './components/ForgotPassword';
 import LoginPage from './page/LoginPage';
 import RegisterPage from './page/RegisterPage';
 import { ThemeProvider } from './components/ThemeProvider';
+import FourOFourNotFound from './page/FourOFourNotFound';
+
 
 const App = () => {
   return (
@@ -16,6 +18,10 @@ const App = () => {
           <Route path="/login" element={<LoginPage/>} />
           <Route path="/register" element={<RegisterPage/>} />
           <Route path="/forgot-password" element={<ForgotPassword/>} />
+          <Route path="/" element= {<LoginPage/>} />
+
+          {/*ROUTE 404*/}
+          <Route path="*" element={<FourOFourNotFound/>} />
       </Routes>
     </Router>
   </ThemeProvider>
