@@ -19,7 +19,6 @@ const App = () => {
           <Route path="/register" element={<RegisterPage/>} />
           <Route path="/forgot-password" element={<ForgotPassword/>} />
           <Route path="/" element= {<LoginPage/>} />
-
           {/*ROUTE 404*/}
           <Route path="*" element={<FourOFourNotFound/>} />
       </Routes>
