@@ -103,6 +103,7 @@ const Register = () => {
       {
         if(res.message) setError("C'è stato un errore") 
         else setError("Mail creata con successo")
+        window.location.href="/login";
       })
       
     } else {

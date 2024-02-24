@@ -1,0 +1,17 @@
+import React from 'react';
+import NavBar from '../components/NavBar';
+
+export default function MainPage() {
+  return (
+    <div>
+      <NavBar />
+      <div className="main-content">
+        <header>
+          <h1>Benvenuti alla main page del sito ufficiale </h1>
+          <p>Informazioni e risorse </p>
+        </header>
+        <img src="../assets/cabby.gif" alt="cabby-on-sella" width="500" height="333"></img>
+      </div>
+    </div>
+  );
+}
