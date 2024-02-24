@@ -74,37 +74,40 @@ const Register = () => {
     );
   };
   const generateVerificationCode = () => {
-    // Genera un codice di verifica casuale di 6 cifre
     return Math.floor(100000 + Math.random() * 900000).toString();
   };
   const handleRegister = async (e) => {
     e.preventDefault();
 
     try {
-      // Verifica validità email
       if (!isValidEmail(email)) {
         throw new Error('L\'email deve avere il dominio "@giorgimi.edu.it".');
       }
 
-      // Invio del codice di verifica via email
-      const code = generateVerificationCode(); // Funzione da implementare per generare un codice casuale
-      var res = await axios.post("http://localhost:3001/api/sendVerificationEmail", {to: email, verificationCode: code}) // Qui si dovrebbe implementare l'invio reale via email
-      
+      const code = generateVerificationCode(); 
+      var res = await axios.post("http://localhost:3001/api/sendVerificationEmail", {to: email, verificationCode: code}) 
+      setError("");
       setVerificationCode(code);
-      setShowVerification(true); // Mostra il componente di verifica
+      setShowVerification(true); 
     } catch (error) {
       setError("Mail già in uso");
     }
   };
 
+  const [showSuccessMessage, setShowSuccessMessage] = useState(false);
+
   const handleVerifyCode = async (e) => {
-    if (verificationCode === tempVerificationCode) { // enteredCode è il codice inserito dall'utente
-      createAccount(email, password, name, surname).then((res) => 
-      {
-        if(res.message) setError("C'è stato un errore") 
-        else setError("Mail creata con successo")
-      })
-      
+    if (verificationCode === tempVerificationCode) {
+      createAccount(email, password, name, surname).then((res) => {
+        if (res.message) {
+          setError("C'è stato un errore");
+        } else {
+          setShowSuccessMessage(true);
+          setTimeout(() => {
+            window.location.href = '/main';
+          }, 3000);
+        }
+      });
     } else {
       setError('Il codice di verifica non è valido.');
     }
@@ -116,7 +119,7 @@ const Register = () => {
       <Stack>
     
         <h2>Registrati</h2>
-        {!showVerification ? ( // Se non è attivo il processo di verifica
+        {!showVerification ? (
         <Container>
             <Row>
                 <Form onSubmit={handleRegister}>
@@ -158,7 +161,6 @@ const Register = () => {
       
       
         ) : (
-          // Se è attivo il processo di verifica
           <div>
             <Form.Group controlId="formVerificationCode">
               <Form.Label>Codice di Verifica</Form.Label>
@@ -169,6 +171,9 @@ const Register = () => {
                 onChange={(e) => setTempVerificationCode(e.target.value)}
               />
             </Form.Group>
+            {showSuccessMessage && (
+              <p style={{ color: 'green', fontSize: '1.7em' }}>Email registrata con successo</p>
+            )}
             <Button variant="primary" onClick={handleVerifyCode}>
               Verifica
             </Button>

@@ -38,4 +38,14 @@ Esempi di chiamate API CRUD:
    Endpoint: /api/login
    Esempio: http://localhost:3001/api/login
    Corpo della richiesta: { "Email_utente": "johndoe@giorgimi.edu.it", "Pw_utente": "password123" }
+
+8. Cambia piu campi:
+ 
+   Endpoin:/api/users/:email
+   Metodo:PUT
+   Corpo della richiesta:{
+  "Nome_utente": "NuovoNome",
+  "Cognome_utente": "NuovoCognome",
+  "AltroCampo": "ValoreNuovo"
+}
 */
