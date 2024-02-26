@@ -346,15 +346,99 @@ Questo modello rappresenta una tabella di salvataggio dei tempi di risposta.
 # Diagramma di Flusso - Richiesta API
 ```mermaid
 graph TD
-  A[Richiesta API] -->|Gestione Middleware Express| B{Endpoint}
-  B -->|Routing| C((Controller))
-  C -->|Elaborazione Richiesta| D{Operazione}
-  D -->|Accesso Database| E[Database MongoDB]
-  E -->|Errore 404| F(Not Found)
-  E -->|Errore 500| G(Internal Server Error)
-  D -->|Eccezione| H(Exception)
-  H -->|Logging| I[Log System]
-  F -->|Risposta| A
-  G -->|Risposta| A
-  I -->|Risposta| A
+  subgraph clusterInstallazione
+    A[Richiesta API] -->|Gestione Middleware Express| B{Endpoint}
+    B -->|Routing| C((Controller))
+    C -->|Elaborazione Richiesta| D{Operazione}
+    D -->|Accesso Database| E[Database MongoDB]
+    E -->|Errore 404| F(Not Found)
+    E -->|Errore 500| G(Internal Server Error)
+    D -->|Eccezione| H(Exception)
+    H -->|Logging| I[Log System]
+    F -->|Risposta| A
+    G -->|Risposta| A
+    I -->|Risposta| A
+  end
+
+  subgraph clusterDocumentazione
+    style clusterDocumentazione fill:#FFDDCC
+    J[Descrizione del API]
+    K[Installazione]
+    K --> L[Assicurati di avere Node.js installato sul tuo sistema.]
+    K --> M[Clona il repository del progetto nella tua macchina locale.]
+    K --> N[Naviga nella directory del progetto tramite il terminale.]
+    K --> O[Esegui il comando: npm install]
+    K --> P[Crea un file .env nella directory principale del progetto e imposta le variabili d'ambiente necessarie.]
+    P --> Q[MONGODB_URI=mongodb://localhost:27017/GGJSDB]
+    P --> R[API_PORT=3001]
+    P --> S[EMAIL_USER=your_email@gmail.com]
+    P --> T[EMAIL_CODE=your_email_password]
+    P --> U[OWNER_EMAIL=owner_email@gmail.com]
+    K --> V[Ora puoi avviare il server Node.js con il comando: npm run avvia]
+    V --> W[Questo comando avvierà sia il server Node.js che il server React, garantendo un'esperienza di sviluppo integrata.]
+    J --> X[Struttura dei File]
+    X --> Y[appConfig.js]
+    X --> Z[routes.js]
+    X --> AA[runExceptionManager.js]
+    X --> AB[server.js]
+    X --> AC[userController.js]
+    Y --> AD[Metodi]
+    AD --> AE[userControl.js]
+    AD --> AF[server.js]
+    AD --> AG[runExceptionManager.js]
+    AD --> AH[appConfig.js]
+    AD --> AI[GGUserSchema.js]
+    AD --> AJ[GGLogSchema.js]
+    AD --> AK[ErrExpSchema.js]
+    AD --> AL[testmethod.js]
+    AD --> AM[postmethod.js]
+    AD --> AN[mailsender.js]
+    AD --> AO[internalmethod.js]
+    AD --> AP[getmethod.js]
+    AD --> AQ[cutdelpatchmethod.js]
+    Y --> AR[Funzioni API e Chiamate]
+    AR --> AS[registerUser]
+    AR --> AT[loginUser]
+    AR --> AU[test]
+    AR --> AV[getLogsForUser]
+    AR --> AW[createUser]
+    AR --> AX[sendVerificationEmail]
+    AR --> AY[getUsers]
+    AR --> AZ[getUserByEmail]
+    AR --> BA[updateUser]
+    AR --> BB[deleteUser]
+    AR --> BC[testWithTiming]
+    AR --> BD[Features di Sicurezza]
+    AR --> BE[Gestione eccezioni e invio mail nel caso di eccezioni gravi.]
+    BE --> BF[Hashing e salting delle password.]
+    BE --> BG[Utilizzo di Helmet per migliorare la sicurezza HTTP.]
+    BE --> BH[Express Rate Limit per limitare le richieste.]
+    BE --> BI[Gestione approfondita degli errori con risposte HTTP appropriate.]
+    BE --> BJ[Logging degli utenti.]
+    BE --> BK[Gestione della chiusura della connessione al database.]
+    BE --> BL[Politiche CORS sulla connessione in locale.]
+    BE --> BM[Gestione centralizzata degli errori http.]
+    AR --> BN[Moduli Esistenti]
+    BN --> BO[bcrypt]
+    BN --> BP[express]
+    BN --> BQ[mongoose]
+    BN --> BR[nodemailer]
+    BN --> BS[dotenv]
+    BN --> BT[helmet]
+    BN --> BU[cors]
+    BN --> BV[express-rate-limit]
+    BN --> BW[app.use() e Spiegazione]
+    BN --> BX[express.json(): Middleware per gestire il parsing del corpo della richiesta in formato JSON.]
+    BN --> BY[bodyParser.json(): Middleware per il parsing del corpo della richiesta in formato JSON.]
+    BN --> BZ[helmet(): Middleware che implementa diverse protezioni di sicurezza HTTP.]
+    BN --> CA[cors(corsOptions): Middleware per la gestione delle politiche CORS con opzioni specifiche.]
+    BN --> CB[express-rate-limit(limiter): Middleware per limitare la frequenza delle richieste.]
+    BN --> CC[Middleware personalizzato per la registrazione degli errori e invio di email di notifica.]
+    AR --> CD[Modelli]
+    CD --> CE[GGUserSchema]
+    CD --> CF[GGUserLogSchema]
+    CD --> CG[ErrorTableSchema]
+    CD --> CH[ExceptionTableSchema]
+    CD --> CI[PerformanceLogSchema]
+  end
 ```
