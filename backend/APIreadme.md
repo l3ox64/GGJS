@@ -346,7 +346,7 @@ Questo modello rappresenta una tabella di salvataggio dei tempi di risposta.
 # Diagramma di Flusso - Richiesta API
 ```mermaid
 graph TD
-  subgraph A
+  subgraph cA
     A[Richiesta API] -->|Gestione Middleware Express| B{Endpoint}
     B -->|Routing| C((Controller))
     C -->|Elaborazione Richiesta| D{Operazione}
@@ -360,7 +360,7 @@ graph TD
     I -->|Risposta| A
   end
 
-  subgraph B
+  subgraph cB
     J{Descrizione del API}
     K[Installazione]
     L[Struttura dei File]
