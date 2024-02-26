@@ -55,6 +55,7 @@ const Login = () => {
       } else { // Altrimenti rimuovi l'email memorizzata (se presente)
         localStorage.removeItem('rememberedEmail');
       }
+      
 
       window.location.href = '/main';
 
