@@ -389,12 +389,11 @@ graph TD
   E -->|Operazione DB: saveError| N[ErrorTableSchema]
   E -->|Operazione DB: saveException| O[ExceptionTableSchema]
   E -->|Operazione DB: savePerformanceLog| P[PerformanceLogSchema]
-  E -->|Errore 404| F(Not Found)
-  E -->|Errore 500| G(Internal Server Error)
-  D -->|Eccezione| H(Exception)
-  H -->|Logging| I[Log System]
-  F -->|Risposta| A
-  G -->|Risposta| A
+
+  F(Not Found) -.-> A
+  G(Internal Server Error) -.-> A
+
+  H(Exception) -->|Logging| I[Log System]
 
   subgraph Log System
     I -->|Log utente| L
