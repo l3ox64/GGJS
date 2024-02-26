@@ -346,7 +346,7 @@ Questo modello rappresenta una tabella di salvataggio dei tempi di risposta.
 # Diagramma di Flusso - Richiesta API
 ```mermaid
 graph TD
-  subgraph clusterA
+  subgraph A
     A[Richiesta API] -->|Gestione Middleware Express| B{Endpoint}
     B -->|Routing| C((Controller))
     C -->|Elaborazione Richiesta| D{Operazione}
@@ -360,7 +360,7 @@ graph TD
     I -->|Risposta| A
   end
 
-  subgraph clusterB
+  subgraph B
     J{Descrizione del API}
     K[Installazione]
     L[Struttura dei File]
@@ -373,42 +373,6 @@ graph TD
 
   J --> K --> L --> M --> N --> O --> P --> Q
 
-  style A fill:#86c7c2,stroke:#4e7a7a,stroke-width:2px
-  style B,C,D,E,F,G,H,I fill:#c7e9e5,stroke:#4e7a7a,stroke-width:2px
-  style J,K,L,M,N,O,P,Q fill:#f5f5f5,stroke:#a1a1a1,stroke-width:2px
 
 ```
-```mermaid
-graph TD
-  A[Richiesta API] -->|Gestione Middleware Express| B{Endpoint}
-  B -->|Routing| C((Controller))
-  C -->|Elaborazione Richiesta| D{Operazione}
-  D -->|Accesso Database| E[Database MongoDB]
 
-  F(Not Found) -.-> A
-  G(Internal Server Error) -.-> A
-
-  H(Exception) -->|Logging| I[Log System]
-
-  subgraph Gestione Dati nel Database
-    D -->|Operazioni DB| E
-    E -->|GGUserSchema| M
-    E -->|GGLogSchema| L
-    E -->|ErrorTableSchema| N
-    E -->|ExceptionTableSchema| O
-    E -->|PerformanceLogSchema| P
-  end
-
-  E -->|Operazione DB: saveLog| L
-  E -->|Operazione DB: saveData| M
-  E -->|Operazione DB: saveError| N
-  E -->|Operazione DB: saveException| O
-  E -->|Operazione DB: savePerformanceLog| P
-
-  subgraph Log System
-    I -->|Log utente| L
-    H -->|Save Exception| O
-    G -->|Save Error| N
-    D -->|Log Performance| P
-  end
-```
