@@ -344,7 +344,7 @@ Questo modello rappresenta una tabella di salvataggio dei tempi di risposta.
 - `autochk`: Booleano, Se è eseguito in automatico o meno
 
 # Diagramma di Flusso - Richiesta API
-
+```
 graph TD
   A[Richiesta API] -->|Gestione Middleware Express| B{Endpoint}
   B -->|Routing| C((Controller))
@@ -357,3 +357,4 @@ graph TD
   F -->|Risposta| A
   G -->|Risposta| A
   I -->|Risposta| A
+```
