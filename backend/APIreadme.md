@@ -370,7 +370,5 @@ graph TD
     P[Moduli Esistenti]
     Q[Modelli]
   end
-
-
 ```
 
