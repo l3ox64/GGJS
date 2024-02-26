@@ -384,23 +384,11 @@ graph TD
   B -->|Routing| C((Controller))
   C -->|Elaborazione Richiesta| D{Operazione}
   D -->|Accesso Database| E[Database MongoDB]
-  E -->|Operazione DB: saveLog| L[GGLogSchema]
-  E -->|Operazione DB: saveData| M[GGUserSchema]
-  E -->|Operazione DB: saveError| N[ErrorTableSchema]
-  E -->|Operazione DB: saveException| O[ExceptionTableSchema]
-  E -->|Operazione DB: savePerformanceLog| P[PerformanceLogSchema]
 
   F(Not Found) -.-> A
   G(Internal Server Error) -.-> A
 
   H(Exception) -->|Logging| I[Log System]
-
-  subgraph Log System
-    I -->|Log utente| L
-    H -->|Save Exception| O
-    G -->|Save Error| N
-    D -->|Log Performance| P
-  end
 
   subgraph Gestione Dati nel Database
     D -->|Operazioni DB| E
@@ -409,5 +397,18 @@ graph TD
     E -->|ErrorTableSchema| N
     E -->|ExceptionTableSchema| O
     E -->|PerformanceLogSchema| P
+  end
+
+  E -->|Operazione DB: saveLog| L
+  E -->|Operazione DB: saveData| M
+  E -->|Operazione DB: saveError| N
+  E -->|Operazione DB: saveException| O
+  E -->|Operazione DB: savePerformanceLog| P
+
+  subgraph Log System
+    I -->|Log utente| L
+    H -->|Save Exception| O
+    G -->|Save Error| N
+    D -->|Log Performance| P
   end
 ```
