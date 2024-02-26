@@ -6,6 +6,7 @@ const { getUsers, getUserByEmail } = require('./methods/getmethod');
 const { createUser } = require('./methods/postmethod');
 const { updateUser, deleteUser } = require('./methods/cutdelpatchmethod');
 const {sendVerificationEmail} = require("./methods/mailsender")
+const {testWithTiming, test} = require("./methods/testmethod")
 
 const registerUser = async (req, res) => {
   try {
@@ -45,24 +46,7 @@ const loginUser = async (req, res) => {
   }
 };
 
-const test = async (req, res) => {
-  try {
-    const testUser = new GGUser({
-      Email_utente: 'test@example.com',
-      Nome_utente: 'Test',
-      Cognome_utente: 'User',
-      Pw_utente: 'testpassword',
-    });
-    await testUser.save();
-    const readUser = await GGUser.findOne({ Email_utente: 'test@example.com' });
-    if(!readUser){return res.status(500).json({ error: 'Errore durante il test di lettura.' });}
-    await createLog(testUser, req, 'test', 200, 'info', testUser, null);
-    await GGUser.findOneAndDelete({ Email_utente: 'test@example.com' });
-    res.json({ message: 'API raggiungibile e test eseguito con successo.' });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-};
+
 
 const getLogsForUser = async (req, res) => {
   try {
@@ -93,4 +77,5 @@ module.exports = {
   loginUser,
   test,
   getLogsForUser,
+  testWithTiming,
 };

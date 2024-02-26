@@ -6,7 +6,9 @@ const getUsers = async (req, res) => {
     res.json(users);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: error.message });
+    error.additionalInfo = 'Errore nell\'invio dell\'email di conferma.';
+    next(error);
+    //res.status(500).json({ error: error.message });
   }
 };
 
@@ -16,7 +18,8 @@ const getUserByEmail = async (req, res) => {
     res.json(user);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: error.message });
+    next(error);
+    //res.status(500).json({ error: error.message });
   }
 };
 

@@ -12,3 +12,16 @@ const GGUserLogSchema = new mongoose.Schema({
 });
 
 module.exports = mongoose.model('GGUserLog', GGUserLogSchema);
+
+const PerformanceLogSchema = new mongoose.Schema({
+  date: { type: Date, default: new Date() },
+  operation: String,
+  writeTime: Number,
+  readTime: Number,
+  updateTime: Number,
+  deleteTime: Number,
+  totalTime: Number,
+  autochk: Boolean,
+});
+
+module.exports = mongoose.model('PerformanceLog', PerformanceLogSchema);

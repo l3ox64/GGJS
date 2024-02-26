@@ -8,7 +8,8 @@ const updateUser = async (req, res) => {
     res.json(updatedUser);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: error.message });
+    next(error);
+    //res.status(500).json({ error: error.message });
   }
 };
 
@@ -19,7 +20,8 @@ const deleteUser = async (req, res) => {
     res.json({ message: 'Utente eliminato con successo.' });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: error.message });
+    next(error);
+    //res.status(500).json({ error: error.message });
   }
 };
 

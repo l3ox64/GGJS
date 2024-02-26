@@ -17,7 +17,8 @@ const createUser = async (req, res) => {
     await createLog(newUser, req, 'createUser', 200, 'info', newUser, null);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: error.message });
+    next(error);
+    //res.status(500).json({ error: error.message });
   }
 };
 

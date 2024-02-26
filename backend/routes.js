@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { sendVerificationEmail, getUsers, getUserByEmail, createUser, updateUser, deleteUser, registerUser, loginUser, test, getLogsForUser } = require('./userController');
+const { sendVerificationEmail, getUsers, getUserByEmail, createUser, updateUser, deleteUser, registerUser, loginUser, test, getLogsForUser, testWithTiming } = require('./userController');
 
 router.post('/sendVerificationEmail', sendVerificationEmail);
 router.get('/users', getUsers);
@@ -12,5 +12,6 @@ router.post('/register', registerUser);
 router.post('/login', loginUser);
 router.get('/test', test);
 router.get('/logs/user/:email', getLogsForUser);
+router.get('/testTime', testWithTiming);
 
 module.exports = router;
