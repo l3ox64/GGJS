@@ -371,8 +371,6 @@ graph TD
     Q[Modelli]
   end
 
-  J --> K --> L --> M --> N --> O --> P --> Q
-
 
 ```
 
