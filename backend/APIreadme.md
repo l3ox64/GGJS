@@ -343,49 +343,17 @@ Questo modello rappresenta una tabella di salvataggio dei tempi di risposta.
 - `totalTime`: Number, Tempo totale in ms
 - `autochk`: Booleano, Se è eseguito in automatico o meno
 
-# Diagramma di Flusso - Richiesta API senza errori
+# Diagramma di Flusso - Richiesta API
 
-```mermaid
-graph TD
-  A[Richiesta API] -->|Gestione Middleware Express| B{Endpoint}
-  B -->|Routing| C((Controller))
-  C -->|Elaborazione Richiesta| D{Operazione}
-  D -->|Accesso Database| E[Database MongoDB]
-  E -->|Risposta| C
-```
-
-# Diagramma di Flusso - Gestione Errore 404 (Endpoint non trovato)
-
-```mermaid
 graph TD
   A[Richiesta API] -->|Gestione Middleware Express| B{Endpoint}
   B -->|Routing| C((Controller))
   C -->|Elaborazione Richiesta| D{Operazione}
   D -->|Accesso Database| E[Database MongoDB]
   E -->|Errore 404| F(Not Found)
+  E -->|Errore 500| G(Internal Server Error)
+  D -->|Eccezione| H(Exception)
+  H -->|Logging| I[Log System]
   F -->|Risposta| A
-```
-
-# Diagramma di Flusso - Gestione Errore 500 (Errore interno del server)
-
-```mermaid
-graph TD
-  A[Richiesta API] -->|Gestione Middleware Express| B{Endpoint}
-  B -->|Routing| C((Controller))
-  C -->|Elaborazione Richiesta| D{Operazione}
-  D -->|Accesso Database| E[Database MongoDB]
-  E -->|Errore 500| F(Internal Server Error)
-  F -->|Risposta| A
-```
-
-# Diagramma di Flusso - Gestione Eccezione non gestita
-
-```mermaid
-graph TD
-  A[Richiesta API] -->|Gestione Middleware Express| B{Endpoint}
-  B -->|Routing| C((Controller))
-  C -->|Elaborazione Richiesta| D{Operazione}
-  D -->|Eccezione| E(Exception)
-  E -->|Risposta| F(Internal Server Error)
-  F -->|Logging| G[Log System]
-```
+  G -->|Risposta| A
+  I -->|Risposta| A
