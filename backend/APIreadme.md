@@ -378,3 +378,37 @@ graph TD
   style J,K,L,M,N,O,P,Q fill:#f5f5f5,stroke:#a1a1a1,stroke-width:2px
 
 ```
+```mermaid
+graph TD
+  A[Richiesta API] -->|Gestione Middleware Express| B{Endpoint}
+  B -->|Routing| C((Controller))
+  C -->|Elaborazione Richiesta| D{Operazione}
+  D -->|Accesso Database| E[Database MongoDB]
+  E -->|Operazione DB: saveLog| L[GGLogSchema]
+  E -->|Operazione DB: saveData| M[GGUserSchema]
+  E -->|Operazione DB: saveError| N[ErrorTableSchema]
+  E -->|Operazione DB: saveException| O[ExceptionTableSchema]
+  E -->|Operazione DB: savePerformanceLog| P[PerformanceLogSchema]
+  E -->|Errore 404| F(Not Found)
+  E -->|Errore 500| G(Internal Server Error)
+  D -->|Eccezione| H(Exception)
+  H -->|Logging| I[Log System]
+  F -->|Risposta| A
+  G -->|Risposta| A
+
+  subgraph Log System
+    I -->|Log utente| L
+    H -->|Save Exception| O
+    G -->|Save Error| N
+    D -->|Log Performance| P
+  end
+
+  subgraph Gestione Dati nel Database
+    D -->|Operazioni DB| E
+    E -->|GGUserSchema| M
+    E -->|GGLogSchema| L
+    E -->|ErrorTableSchema| N
+    E -->|ExceptionTableSchema| O
+    E -->|PerformanceLogSchema| P
+  end
+```
