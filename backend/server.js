@@ -6,40 +6,43 @@ const { sendNotificationEmail } = require('./runExceptionManager');
 require('dotenv').config()
 const app = express();
 const { logError, logException } = require('./methods/internalmethod');
+const { MongoClient } = require('mongodb');
+const os = require('os-utils');
 
-const DB_CHK_INTERVAL = 1000*60*10;
+const DB_CHK_INTERVAL = 1000*60*30;
 const TIMEOUT_TIME=10000 //tempo timeout in caso di errore 
-const PORT = process.env.API_PORT;
+const PORT = process.env.API_PORT || 3001;
 
 
 try {
-  mongoose.connect('mongodb://localhost:27017/GGJSDB', { useNewUrlParser: true, useUnifiedTopology: true });
+  mongoose.connect('mongodb://localhost:27017/GGJSDB', {});
   console.log('Connesso al database MongoDB');
 } catch (error) {
   console.error('Errore durante la connessione al database MongoDB:', error);
   process.exit(1);
 }
-
+try{
 setInterval(runTestWithTiming, DB_CHK_INTERVAL);
 configureApp(app);
-process.on('SIGINT', () => {
-  try{
-    mongoose.connection.close()
-      console.log('Connessione al database chiusa correttamente');
-      process.exit(0);
-  }catch{console.log("errore dutante la chiusura della connessione")}
-});
 var server = app.listen(PORT, () => {
   console.log(`Server in ascolto sulla porta ${PORT}`);
 });
+} catch (error) {
+  console.error('Errore durante l\'avvio del server:', error);
+  process.exit(1);
+}
+
 process.on('uncaughtException', handleUncaughtException); //blocco nel caso di uncaughtException
 process.on('unhandledRejection', handleUnhandledRejection); // " unhandledRejection
+process.on('SIGINT', handleSIGINT);
 
 
-
-
-function handleUncaughtException(err) {
+function handleUncaughtException(err) { 
   const stackTrace = err.stack || 'No stack trace available';
+  if (err instanceof TypeError) {
+  console.error(`TypeError: ${err.message}`);
+  logException('TypeError', err.message, stackTrace);
+  }else{
   logException('Uncaught Exception', err.message, stackTrace);
   console.error(`Errore non gestito: ${err.message}`);
   server.close(() => {
@@ -49,8 +52,8 @@ function handleUncaughtException(err) {
       });
     }, TIMEOUT_TIME);
   });
-  
   sendNotificationEmail('Errore non gestito nel server', err.message);
+}
 }
 function handleUnhandledRejection(reason) {
   const stackTrace = reason.stack || 'No stack trace available';
@@ -64,4 +67,13 @@ function handleUnhandledRejection(reason) {
     }, TIMEOUT_TIME);
   });
   sendNotificationEmail('Unhandled Rejection nel server', reason);
+}
+function handleSIGINT() {
+  try {
+    mongoose.connection.close();
+    console.log('Connessione al database chiusa correttamente');
+    process.exit(0);
+  } catch (error) {
+    console.log("Errore durante la chiusura della connessione al database:", error);
+  }
 }

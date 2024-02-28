@@ -21,7 +21,13 @@ const PerformanceLogSchema = new mongoose.Schema({
   updateTime: Number,
   deleteTime: Number,
   totalTime: Number,
+  dskUsage: Number,
   autochk: Boolean,
+  APIDBMemory: Number,
+  TotalMemory: Number,
+  PercMemory: Number,
+  cpu: Number,
+  slowQueries: Number,
 });
 
 module.exports = mongoose.model('PerformanceLog', PerformanceLogSchema);

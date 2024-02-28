@@ -70,13 +70,14 @@ getLogsForUser(req, res)
 
 ### server.js
 
-Nessun metodo specifico. Configura il server e gestisce la connessione al database.
+```plaintext
+handleUncaughtException(err)
+handleUnhandledRejection(reason)
+```
 
 ### runExceptionManager.js
 
 ```plaintext
-handleUncaughtException(err)
-handleUnhandledRejection(reason)
 sendNotificationEmail(subject, message)
 ```
 
@@ -137,6 +138,13 @@ getUserByEmail(req, res)
 ```plaintext
 updateUser(req, res)
 deleteUser(req, res)
+```
+### testmethod.js
+```plaintext
+testWithTiming(req, res, { auto = false })
+getServerStatus()
+generateRandomUserData()
+test() [DEPRECATO]
 ```
 
 ## Funzioni API e Chiamate
@@ -217,7 +225,7 @@ deleteUser(req, res)
    - Esempio: `http://localhost:3001/api/users/johndoe@giorgimi.edu.it`
 ### 3. `testWithTiming`
 
-   - Descrizione: Funzione di test.
+   - Descrizione: Funzione di test con log delle informazioni.
    - Metodo: Qualsiasi
    - Endpoint: /api/testTime
    - Esempio: `http://localhost:3001/api/testTime`
@@ -231,8 +239,9 @@ deleteUser(req, res)
 5. Gestione approfondita degli errori con risposte HTTP appropriate.
 6. Logging degli utenti.
 7. Gestione della chiusura della connessione al database.
-8. Politiche CORS sulla connessione in locale.
+8. Politiche CORS sulla connessione in locale. 
 9. Gestione centralizzata degli errori http.
+10. Verifica periodica dello stato del server e avviso nel caso di carichi
 
 ## Moduli Esistenti
 
@@ -343,49 +352,70 @@ Questo modello rappresenta una tabella di salvataggio dei tempi di risposta.
 - `totalTime`: Number, Tempo totale in ms
 - `autochk`: Booleano, Se è eseguito in automatico o meno
 
-# Diagramma di Flusso - Richiesta API senza errori
+# Diagramma di Flusso
 
 ```mermaid
 graph TD
-  A[Richiesta API] -->|Gestione Middleware Express| B{Endpoint}
-  B -->|Routing| C((Controller))
-  C -->|Elaborazione Richiesta| D{Operazione}
-  D -->|Accesso Database| E[Database MongoDB]
-  E -->|Risposta| C
-```
 
-# Diagramma di Flusso - Gestione Errore 404 (Endpoint non trovato)
+subgraph clusterStart
+  A[Incoming Request]
+end
 
-```mermaid
-graph TD
-  A[Richiesta API] -->|Gestione Middleware Express| B{Endpoint}
-  B -->|Routing| C((Controller))
-  C -->|Elaborazione Richiesta| D{Operazione}
-  D -->|Accesso Database| E[Database MongoDB]
-  E -->|Errore 404| F(Not Found)
-  F -->|Risposta| A
-```
+subgraph clusterRoutes
+  A -->|1. Route| B[Route Handling]
+  B -->|2. Controller| C[Controller Logic]
+  C -->|3. Success| D[Send Response]
+  C -->|4. Failure| E[Handle Errors]
+end
 
-# Diagramma di Flusso - Gestione Errore 500 (Errore interno del server)
+subgraph clusterException
+  E -->|5. Log Error| F[Log Exception]
+  E -->|6. Notify Owner| G[Send Notification Email]
+  F -->|7. Restart Server| H[Restart Server]
+  H -->|8. Exception Handling| I[Handle Uncaught Exception]
+  I -->|9. Close Server| J[Close Server Connection]
+  J -->|10. Restart Server| K[Restart Server]
+end
 
-```mermaid
-graph TD
-  A[Richiesta API] -->|Gestione Middleware Express| B{Endpoint}
-  B -->|Routing| C((Controller))
-  C -->|Elaborazione Richiesta| D{Operazione}
-  D -->|Accesso Database| E[Database MongoDB]
-  E -->|Errore 500| F(Internal Server Error)
-  F -->|Risposta| A
-```
+subgraph clusterInternalMethods
+  C -->|11. Internal Method| L[Internal Method Logic]
+  L -->|12. Create Log| M[Log Created]
+  L -->|13. Log Error| N[Error Logged]
+  L -->|14. Log Exception| O[Exception Logged]
+end
 
-# Diagramma di Flusso - Gestione Eccezione non gestita
+subgraph clusterGetMethods
+  C -->|15. Get Users| P[Retrieve Users]
+  C -->|16. Get User by Email| Q[Retrieve User by Email]
+end
 
-```mermaid
-graph TD
-  A[Richiesta API] -->|Gestione Middleware Express| B{Endpoint}
-  B -->|Routing| C((Controller))
-  C -->|Elaborazione Richiesta| D{Operazione}
-  D -->|Eccezione| E(Exception)
-  E -->|Risposta| F(Internal Server Error)
-  F -->|Logging| G[Log System]
+subgraph clusterCutDelPatchMethods
+  C -->|17. Update User| R[Update User]
+  C -->|18. Delete User| S[Delete User]
+end
+
+A --> B
+B --> C
+C -->|Yes| D
+C -->|No| E
+D --> M
+E --> L
+F -->|Yes| H
+F -->|No| G
+H --> I
+I --> J
+J --> K
+C --> L
+L --> M
+L --> N
+L --> O
+C --> P
+P --> D
+C --> Q
+Q --> D
+C --> R
+R --> D
+C --> S
+S --> D
+
 ```

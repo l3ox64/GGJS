@@ -9,7 +9,7 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-const sendVerificationEmail = async (req, res) => {
+const sendVerificationEmail = async (req, res, next) => {
   try {
     const { to, verificationCode } = req.body;
     const existingUser = await GGUser.findOne({ Email_utente: to });

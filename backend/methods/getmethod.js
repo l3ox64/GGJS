@@ -1,6 +1,6 @@
 const { GGUser } = require('../models/GGUserSchema');
 
-const getUsers = async (req, res) => {
+const getUsers = async (req, res, next) => {
   try {
     const users = await GGUser.find();
     res.json(users);
@@ -12,7 +12,7 @@ const getUsers = async (req, res) => {
   }
 };
 
-const getUserByEmail = async (req, res) => {
+const getUserByEmail = async (req, res, next) => {
   try {
     const user = await GGUser.findOne({ Email_utente: req.params.email });
     res.json(user);

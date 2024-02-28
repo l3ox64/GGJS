@@ -13,5 +13,4 @@ router.post('/login', loginUser);
 router.get('/test', test);
 router.get('/logs/user/:email', getLogsForUser);
 router.get('/testTime', testWithTiming);
-
 module.exports = router;
