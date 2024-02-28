@@ -85,7 +85,7 @@ const Register = () => {
       }
 
       const code = generateVerificationCode(); 
-      var res = await axios.post("http://localhost:3001/api/sendVerificationEmail", {to: email, verificationCode: code}) 
+      //var res = await axios.post("http://localhost:3001/api/sendVerificationEmail", {to: email, verificationCode: code}) 
       setError("");
       setVerificationCode(code);
       setShowVerification(true); 
@@ -104,7 +104,7 @@ const Register = () => {
         } else {
           setShowSuccessMessage(true);
           setTimeout(() => {
-            window.location.href = '/main';
+            window.location.href = '/login';
           }, 3000);
         }
       });

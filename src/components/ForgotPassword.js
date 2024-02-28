@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Form, Button, Col } from 'react-bootstrap';
+import { Form, Button } from 'react-bootstrap';
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState('');

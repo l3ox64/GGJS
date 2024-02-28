@@ -352,6 +352,7 @@ Questo modello rappresenta una tabella di salvataggio dei tempi di risposta.
 - `totalTime`: Number, Tempo totale in ms
 - `autochk`: Booleano, Se è eseguito in automatico o meno
 
+<<<<<<< HEAD
 # Diagramma di Flusso
 
 ```mermaid
@@ -419,3 +420,35 @@ C --> S
 S --> D
 
 ```
+=======
+# Diagramma di Flusso - Richiesta API
+```mermaid
+graph TD
+  subgraph cA
+    A[Richiesta API] -->|Gestione Middleware Express| B{Endpoint}
+    B -->|Routing| C((Controller))
+    C -->|Elaborazione Richiesta| D{Operazione}
+    D -->|Accesso Database| E[Database MongoDB]
+    E -->|Errore 404| F(Not Found)
+    E -->|Errore 500| G(Internal Server Error)
+    D -->|Eccezione| H(Exception)
+    H -->|Logging| I[Log System]
+    F -->|Risposta| A
+    G -->|Risposta| A
+    I -->|Risposta| A
+  end
+
+  subgraph cB
+    J{Descrizione del API}
+    K[Installazione]
+    L[Struttura dei File]
+    M[Metodi Presenti]
+    N[Funzioni API e Chiamate]
+    O[Features di Sicurezza]
+    P[Moduli Esistenti]
+    Q[Modelli]
+  end
+ J --> K --> L --> M --> N --> O --> P --> Q
+```
+
+>>>>>>> 17250dfd4a7ec387d80299c68dda0cbb99bb8fa3
