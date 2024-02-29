@@ -1,0 +1,30 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "appConfig.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^5.1.1",
+    "cors": "^2.8.5",
+    "diskusage": "^1.2.0",
+    "dotenv": "^16.4.5",
+    "express": "^4.18.3",
+    "express-rate-limit": "^7.1.5",
+    "helmet": "^7.1.0",
+    "mongodb": "^6.4.0",
+    "mongoose": "^8.2.0",
+    "nodemailer": "^6.9.11",
+    "os-utils": "^0.0.14",
+    "performance-now": "^2.1.0"
+  },
+  "devDependencies": {
+    "depcheck": "^1.4.7"
+  }
+}
