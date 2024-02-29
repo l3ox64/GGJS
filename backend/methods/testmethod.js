@@ -3,7 +3,7 @@ const { GGUser } = require('../models/GGUserSchema');
 const PerformanceLog = require('../models/GGLogSchema');
 const { MongoClient } = require('mongodb');
 const os = require('os-utils');
-const { ExceptionTable } = require('../models/ErrExpSchema');
+//const { ExceptionTable } = require('../models/ErrExpSchema');
 const { Error } = require('mongoose');
 const diskusage = require('diskusage');
 

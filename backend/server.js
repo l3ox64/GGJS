@@ -1,13 +1,13 @@
 const express = require('express');
 const mongoose = require('mongoose');
-const { testWithTiming } = require('./methods/testmethod');
+//const { testWithTiming } = require('./methods/testmethod');
 const {configureApp, runTestWithTiming} = require('./appConfig');
 const { sendNotificationEmail } = require('./runExceptionManager');
 require('dotenv').config()
 const app = express();
 const { logError, logException } = require('./methods/internalmethod');
-const { MongoClient } = require('mongodb');
-const os = require('os-utils');
+//const { MongoClient } = require('mongodb');
+//const os = require('os-utils');
 
 const DB_CHK_INTERVAL = 1000*60*30;
 const TIMEOUT_TIME=10000 //tempo timeout in caso di errore 

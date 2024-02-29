@@ -1,7 +1,7 @@
 const bcrypt = require('bcrypt');
 const { GGUser } = require('./models/GGUserSchema');
 const { createLog } = require('./methods/internalmethod');
-const mailsender = require('./methods/mailsender');
+//const mailsender = require('./methods/mailsender');
 const { getUsers, getUserByEmail } = require('./methods/getmethod');
 const { createUser } = require('./methods/postmethod');
 const { updateUser, deleteUser } = require('./methods/cutdelpatchmethod');

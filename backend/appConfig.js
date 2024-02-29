@@ -1,14 +1,14 @@
 const express = require('express');
-const bodyParser = require('body-parser');
+//const bodyParser = require('body-parser');
 const helmet = require('helmet');
 const cors = require('cors');
 const { testWithTiming } = require('./methods/testmethod');
 const rateLimit = require('express-rate-limit');
 const ErrorTable = require('./models/ErrExpSchema').ErrorTable;
-const methodOverride = require('method-override')
+//const methodOverride = require('method-override')
 
 const configureApp = (app) => {
-  app.use(methodOverride())
+  //app.use(methodOverride())
   app.use((err, req, res, next) => {
     console.error(err.stack);
     const additionalInfo = err.additionalInfo || 'Nessuna informazione aggiuntiva';
@@ -51,7 +51,7 @@ const configureApp = (app) => {
   });
 
   app.use(express.json());
-  app.use(bodyParser.json());
+  //app.use(bodyParser.json());
   app.use(helmet());
 
   const corsOptions = {
