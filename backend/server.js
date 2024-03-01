@@ -14,8 +14,6 @@ const TIMEOUT_TIME=10000 //tempo timeout in caso di errore
 const PORT = process.env.API_PORT || 3001;
 const MAX_DB_CONNECTION_RETRIES = 5;
 
-<<<<<<< HEAD
-
 const connectWithRetry = async () => {
   let retryCount = 0;
   const retryInterval = 5000; // millisecondi
@@ -28,7 +26,9 @@ const connectWithRetry = async () => {
       retryCount++;
       console.log(`Ritentando la connessione (tentativo ${retryCount}/${MAX_DB_CONNECTION_RETRIES})...`);
       await new Promise(resolve => setTimeout(resolve, retryInterval));
-=======
+    } 
+  } 
+
 const GGUser = mongoose.model('GGUser', GGUserSchema);
 const transporter = nodemailer.createTransport({
   service: 'gmail',
@@ -45,9 +45,8 @@ app.post('/api/sendVerificationEmail', async (req, res) => {
   const existingUser = await GGUser.findOne({ Email_utente: to });
     if (existingUser) {
       return res.status(400).json({ error: 'L\'email è già registrata.' });
->>>>>>> main
     }
-  }
+  })
   if (retryCount === MAX_DB_CONNECTION_RETRIES) {
     console.error(`Impossibile connettersi al database dopo ${MAX_DB_CONNECTION_RETRIES} tentativi.`);
     process.exit(1);
