@@ -1,18 +1,34 @@
 const express = require('express');
 const mongoose = require('mongoose');
-const bodyParser = require('body-parser');
-const bcrypt = require('bcrypt');
-const rateLimit = require('express-rate-limit');
-const helmet = require('helmet');
-const GGUserSchema = require('./GGUserSchema');
+//const { testWithTiming } = require('./methods/testmethod');
+const {configureApp, runTestWithTiming} = require('./appConfig');
+const { sendNotificationEmail } = require('./runExceptionManager');
+require('dotenv').config()
 const app = express();
-const PORT = process.env.PORT || 3001;
-const cors = require('cors');
-const nodemailer = require('nodemailer');
-require("dotenv").config()
+const { logError, logException } = require('./methods/internalmethod');
+//const { MongoClient } = require('mongodb');
+//const os = require('os-utils');
 
-mongoose.connect('mongodb://localhost:27017/GGJSDB', { useNewUrlParser: true, useUnifiedTopology: true });
+const DB_CHK_INTERVAL = 1000*60*30;
+const TIMEOUT_TIME=10000 //tempo timeout in caso di errore 
+const PORT = process.env.API_PORT || 3001;
+const MAX_DB_CONNECTION_RETRIES = 5;
 
+<<<<<<< HEAD
+
+const connectWithRetry = async () => {
+  let retryCount = 0;
+  const retryInterval = 5000; // millisecondi
+  while (retryCount < MAX_DB_CONNECTION_RETRIES) {
+    try {
+      await mongoose.connect('mongodb://localhost:27017/GGJSDB', {});
+      break;
+    } catch (error) {
+      console.error(`Errore durante la connessione al database: ${error.message}`);
+      retryCount++;
+      console.log(`Ritentando la connessione (tentativo ${retryCount}/${MAX_DB_CONNECTION_RETRIES})...`);
+      await new Promise(resolve => setTimeout(resolve, retryInterval));
+=======
 const GGUser = mongoose.model('GGUser', GGUserSchema);
 const transporter = nodemailer.createTransport({
   service: 'gmail',
@@ -29,169 +45,77 @@ app.post('/api/sendVerificationEmail', async (req, res) => {
   const existingUser = await GGUser.findOne({ Email_utente: to });
     if (existingUser) {
       return res.status(400).json({ error: 'L\'email è già registrata.' });
+>>>>>>> main
     }
-  const mailOptions = {
-    from: 'milonxva9@gmail.com',
-    to: to,
-    subject: 'Conferma Email',
-    text: `Il tuo codice di verifica è: ${verificationCode}`,
-  };
+  }
+  if (retryCount === MAX_DB_CONNECTION_RETRIES) {
+    console.error(`Impossibile connettersi al database dopo ${MAX_DB_CONNECTION_RETRIES} tentativi.`);
+    process.exit(1);
+  }
+};
 
-  transporter.sendMail(mailOptions, (error, info) => {
-    if (error) {
-      console.error(error);
-      res.status(500).send('Errore nell\'invio dell\'email di conferma.');
-    } else {
-      console.log('Email di conferma inviata: ' + info.response);
-      res.status(200).send('Email di conferma inviata con successo.');
-    }
+connectWithRetry();
+
+try {
+  setInterval(runTestWithTiming, DB_CHK_INTERVAL);
+  configureApp(app);
+  var server = app.listen(PORT, () => {
+    console.log(`Server in ascolto sulla porta ${PORT}`);
   });
-});
-const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000,
-  max: 100,
-});
-app.use('/api/', limiter);
+} catch (error) {
+  console.error('Errore durante l\'avvio del server:', error);
+  process.exit(1);
+}
 
-app.use((req, res, next) => {
-  console.log(`${req.method} ${req.originalUrl}`);
-  next();
-});
+process.on('uncaughtException', handleUncaughtException); // blocco nel caso di uncaughtException
+process.on('unhandledRejection', handleUnhandledRejection); // " unhandledRejection
+process.on('SIGINT', handleSIGINT);
 
-app.get('/api/users', async (req, res) => {
-  try {
-    const users = await GGUser.find();
-    res.json(users);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: error.message });
-  }
-});
-
-app.get('/api/users/:email', async (req, res) => {
-  try {
-    const user = await GGUser.findOne({ Email_utente: req.params.email });
-    res.json(user);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: error.message });
-  }
-});
-
-app.post('/api/users', async (req, res) => {
-  try {
-    const { Email_utente, Pw_utente } = req.body;
-    if (!Email_utente || !Pw_utente) {
-      return res.status(400).json({ error: 'Email e password sono campi obbligatori.' });
-    }
-
-    const saltRounds = 10;
-    const hashedPassword = await bcrypt.hash(Pw_utente, saltRounds);
-
-    const newUser = await GGUser.create({ ...req.body, Pw_utente: hashedPassword });
-    res.json(newUser);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: error.message });
-  }
-});
-
-app.put('/api/users/:email', async (req, res) => {
-  try {
-    const updatedUser = await GGUser.findOneAndUpdate({ Email_utente: req.params.email }, req.body, { new: true });
-    res.json(updatedUser);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: error.message });
-  }
-});
-
-app.delete('/api/users/:email', async (req, res) => {
-  try {
-    await GGUser.findOneAndDelete({ Email_utente: req.params.email });
-    res.json({ message: 'Utente eliminato con successo.' });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: error.message });
-  }
-});
-
-app.post('/api/register', async (req, res) => {
-  try {
-    const { Email_utente, Pw_utente, Nome_utente, Cognome_utente } = req.body;
-
-
-    const saltRounds = 10;
-    const hashedPassword = await bcrypt.hash(Pw_utente, saltRounds);
-
-    const newUser = await GGUser.create({
-      Email_utente,
-      Pw_utente: hashedPassword,
-      Nome_utente,
-      Cognome_utente,
+function handleUncaughtException(err) {
+  const stackTrace = err.stack || 'No stack trace available';
+  if (err instanceof TypeError) {
+    console.error(`TypeError: ${err.message}`);
+    logException('TypeError', err.message, stackTrace);
+  } else {
+    logException('Eccezione non gestita', err.message, stackTrace);
+    console.error(`Errore non gestito: ${err.message}`);
+    server.close(() => {
+      setTimeout(() => {
+        server.listen(PORT, () => {
+          console.log(`Server riavviato dopo errore: ${err.message}`);
+        });
+      }, TIMEOUT_TIME);
     });
-
-    res.json(newUser);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: error.message });
+    sendNotificationEmail('Errore non gestito nel server', err.message);
   }
-});
+}
 
-app.post('/api/login', async (req, res) => {
+function handleUnhandledRejection(reason) {
+  const stackTrace = reason.stack || 'Nessuna traccia disponibile';
+  logException('Unhandled Rejection', reason, stackTrace);
+  console.error(`Unhandled Rejection: ${reason}`);
+  server.close(() => {
+    setTimeout(() => {
+      server.listen(PORT, () => {
+        console.log(`Server riavviato dopo errore: ${reason}`);
+      });
+    }, TIMEOUT_TIME);
+  });
+  sendNotificationEmail('Unhandled Rejection non gestito nel server', reason);
+}
+
+function handleSIGINT() {
   try {
-    const { Email_utente, Pw_utente } = req.body;
-
-    const user = await GGUser.findOne({ Email_utente });
-    if (!user) {
-      return res.status(400).json({ error: 'Email non registrata.' });
+    if (server) {
+      console.log('Stop del server...');
+      server.close();
+      console.log('Server stoppato con successo.');
     }
-
-    const passwordMatch = await bcrypt.compare(Pw_utente, user.Pw_utente);
-    if (!passwordMatch) {
-      return res.status(400).json({ error: 'Password non valida.' });
-    }
-
-    res.json({ message: 'Accesso riuscito.' });
+    mongoose.connection.close();
+    console.log('Connessione al database chiusa con successo.');
+    process.exit(0);
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: error.message });
+    console.error('Errore durante la chiusura:', error);
+    process.exit(1);
   }
-});
-
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-});
-
-
-
-
-
-
-//___________________________________metodo di testing__________________________________________
-app.get('/api/test', async (req, res) => {
-  try {
-    // Test di scrittura
-    const testUser = new GGUser({
-      Email_utente: 'test@example.com',
-      Nome_utente: 'Test',
-      Cognome_utente: 'User',
-      Pw_utente: 'testpassword',
-    });
-
-    await testUser.save();
-
-    // Test di lettura
-    const readUser = await GGUser.findOne({ Email_utente: 'test@example.com' });
-    if (!readUser) {
-      return res.status(500).json({ error: 'Errore durante il test di lettura.' });
-    }
-
-    // Test di eliminazione
-    await GGUser.findOneAndDelete({ Email_utente: 'test@example.com' });
-
-    res.json({ message: 'API raggiungibile e test eseguito con successo.' });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-});
+}

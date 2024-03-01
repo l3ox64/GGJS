@@ -3,6 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+<<<<<<< HEAD
+    "nodemon": "^3.1.0"
+=======
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
@@ -28,13 +31,10 @@
     "react-router-dom": "^6.22.1",
     "react-scripts": "^5.0.1",
     "web-vitals": "^2.1.4"
+>>>>>>> main
   },
   "scripts": {
-    "avvia": "concurrently \"nodemon backend/server.js\" \"react-scripts start\"",
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "avvia": "concurrently \"nodemon backend/server.js\" \"cd frontend && npm start\""
   },
   "eslintConfig": {
     "extends": [
