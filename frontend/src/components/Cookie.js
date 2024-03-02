@@ -23,4 +23,4 @@ export const redirectCookie = (redirectUrl) => {
   } else {
     window.location.href = '/login';
   }
-};
+}
