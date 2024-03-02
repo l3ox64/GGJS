@@ -1,9 +1,9 @@
-import { useEffect, useState } from "react"
-import { Button } from "react-bootstrap"
+//import { useEffect, useState } from "react"
+//import { Button } from "react-bootstrap"
 import { useTheme } from "./ThemeProvider"
 
 export default function() {
-    const {dark, toggleTheme} = useTheme()
+    const {toggleTheme} = useTheme()
     const switchTheme = () => {
         toggleTheme()
         //document.body.setAttribute("data-bs-theme", localStorage.getItem("theme"))

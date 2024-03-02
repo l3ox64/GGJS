@@ -352,7 +352,6 @@ Questo modello rappresenta una tabella di salvataggio dei tempi di risposta.
 - `totalTime`: Number, Tempo totale in ms
 - `autochk`: Booleano, Se è eseguito in automatico o meno
 
-<<<<<<< HEAD
 # Diagramma di Flusso
 
 ```mermaid
@@ -450,5 +449,3 @@ graph TD
   end
  J --> K --> L --> M --> N --> O --> P --> Q
 ```
-
->>>>>>> 17250dfd4a7ec387d80299c68dda0cbb99bb8fa3

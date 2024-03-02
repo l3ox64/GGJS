@@ -5,7 +5,7 @@ const {configureApp, runTestWithTiming} = require('./appConfig');
 const { sendNotificationEmail } = require('./runExceptionManager');
 require('dotenv').config()
 const app = express();
-const { logError, logException } = require('./methods/internalmethod');
+const { logException } = require('./methods/internalmethod');
 //const { MongoClient } = require('mongodb');
 //const os = require('os-utils');
 
@@ -28,25 +28,6 @@ const connectWithRetry = async () => {
       await new Promise(resolve => setTimeout(resolve, retryInterval));
     } 
   } 
-
-const GGUser = mongoose.model('GGUser', GGUserSchema);
-const transporter = nodemailer.createTransport({
-  service: 'gmail',
-  auth: {
-    user: 'milonxva9@gmail.com',
-    pass: 'bkev omjw uqsr zywo',
-  },
-});
-app.use(bodyParser.json());
-app.use(helmet());
-app.use(cors());
-app.post('/api/sendVerificationEmail', async (req, res) => {
-  const { to, verificationCode } = req.body;
-  const existingUser = await GGUser.findOne({ Email_utente: to });
-    if (existingUser) {
-      return res.status(400).json({ error: 'L\'email è già registrata.' });
-    }
-  })
   if (retryCount === MAX_DB_CONNECTION_RETRIES) {
     console.error(`Impossibile connettersi al database dopo ${MAX_DB_CONNECTION_RETRIES} tentativi.`);
     process.exit(1);
@@ -92,7 +73,7 @@ function handleUncaughtException(err) {
 function handleUnhandledRejection(reason) {
   const stackTrace = reason.stack || 'Nessuna traccia disponibile';
   logException('Unhandled Rejection', reason, stackTrace);
-  console.error(`Unhandled Rejection: ${reason}`);
+  console.error(`Unhandled Rejection: ${reason}, ${stackTrace}`);
   server.close(() => {
     setTimeout(() => {
       server.listen(PORT, () => {
