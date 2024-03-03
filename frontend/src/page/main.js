@@ -3,12 +3,13 @@ import NavBar from '../components/NavBar';
 import { isAuthCookie } from '../components/Cookie'; // Assicurati di impostare il percorso corretto per il controllo dell'autenticazione
 
 
-  if (!isAuthCookie()) {
-    window.location.assign('/Login');
-  };
 
 
 export default function MainPage() {
+  if (!isAuthCookie()) {
+    window.location.assign('/Login');
+    return 0;
+  };
   return (
     <div>
       <NavBar />
