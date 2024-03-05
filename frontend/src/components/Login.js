@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Form, Button, Stack } from 'react-bootstrap';
 import { setAuthCookie } from '../components/Cookie'; 
 
+
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -52,9 +53,11 @@ const Login = () => {
       setError(null);
 
       if (rememberMe) { // Se l'utente ha selezionato "Remember Me", memorizza l'email
+        setAuthCookie(1);
         localStorage.setItem('rememberedEmail', email);
       } else { // Altrimenti rimuovi l'email memorizzata (se presente)
         localStorage.removeItem('rememberedEmail');
+        setAuthCookie(0);
       }
 
       window.location.href = '/main';
@@ -62,6 +65,7 @@ const Login = () => {
     } catch (error) {
       setError(error.message);
     }
+
   };
 
   return (
