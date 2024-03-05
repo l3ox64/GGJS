@@ -15,6 +15,7 @@ export const isAuthCookie = () => {
 
 export const removeAuthCookie = () => {
   Cookies.remove('user');
+  window.location.assign('/Login');
 };
 
 export const redirectCookie = (redirectUrl) => {

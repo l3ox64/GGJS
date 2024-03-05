@@ -1,6 +1,6 @@
 import React from 'react';
 import NavBar from '../components/NavBar';
-import { isAuthCookie } from '../components/Cookie'; // Assicurati di impostare il percorso corretto per il controllo dell'autenticazione
+import { isAuthCookie, removeAuthCookie } from '../components/Cookie'; // Assicurati di impostare il percorso corretto per il controllo dell'autenticazione
 
 
 export default function MainPage() { 
@@ -18,6 +18,7 @@ export default function MainPage() {
         <header>
           <h1>Benvenuti alla main page del sito ufficiale</h1>
           <p>Informazioni e risorse</p>
+          <button onClick={removeAuthCookie}>Logout</button>
         </header>
         <img src="../assets/cabby.gif" alt="cabby-on-sella" width="500" height="333" />
       </div>

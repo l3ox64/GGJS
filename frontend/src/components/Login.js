@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Form, Button, Stack } from 'react-bootstrap';
 import { setAuthCookie } from '../components/Cookie'; 
+import { isAuthCookie } from '../components/Cookie';
 
 
 const Login = () => {
@@ -16,6 +17,10 @@ const Login = () => {
     if (rememberedEmail) {
       setEmail(rememberedEmail);
       setRememberMe(true);
+    }
+    if (isAuthCookie()) {
+      window.location.assign('/Main');
+      return 0;
     }
   }, []);
 
