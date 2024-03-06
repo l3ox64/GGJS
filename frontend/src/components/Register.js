@@ -86,12 +86,11 @@ const Register = () => {
         throw new Error('L\'email deve avere il dominio "@giorgimi.edu.it".');
       }
 
-      // Invio del codice di verifica via email
-      const code = generateVerificationCode(); // Funzione da implementare per generare un codice casuale
-      var res = await axios.post("http://localhost:3001/api/sendVerificationEmail", {to: email, verificationCode: code}) // Qui si dovrebbe implementare l'invio reale via email
+      const code = generateVerificationCode(); 
+      var res = await axios.post("http://localhost:3001/api/sendVerificationEmail", {to: email, verificationCode: code}) 
       
       setVerificationCode(code);
-      setShowVerification(true); // Mostra il componente di verifica
+      setShowVerification(true); 
     } catch (error) {
       setError("Mail già in uso");
     }

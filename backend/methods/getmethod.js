@@ -23,6 +23,8 @@ const getUserByEmail = async (req, res, next) => {
   }
 };
 
+
+
 module.exports = {
   getUsers,
   getUserByEmail,

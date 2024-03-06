@@ -43,6 +43,24 @@ const sendVerificationEmail = async (req, res, next) => {
   }
 };
 
+const sendPasswordResetEmail = async (to, token) => {
+  try {
+    const mailOptions = {
+      from: process.env.EMAIL_USER,
+      to: to,
+      subject: 'Recupero Password',
+      text: `Hai richiesto il recupero della password. Utilizza il seguente link per reimpostare la tua password: http://tuo-sito.com/reset-password?token=${token}`,
+    };
+
+    await transporter.sendMail(mailOptions);
+    console.log('Email di recupero password inviata a: ' + to);
+  } catch (error) {
+    console.error('Errore nell\'invio dell\'email di recupero password:', error);
+    throw new Error('Errore nell\'invio dell\'email di recupero password.');
+  }
+};
+
 module.exports = {
   sendVerificationEmail,
+  sendPasswordResetEmail,
 };
