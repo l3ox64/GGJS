@@ -11,11 +11,15 @@ const transporter = nodemailer.createTransport({
 
 const sendVerificationEmail = async (req, res, next) => {
   try {
-    const { to, verificationCode } = req.body;
+    
+    const { to, verificationCode, isReset=false } = req.body;
     const existingUser = await GGUser.findOne({ Email_utente: to });
 
-    if (existingUser) {
+    if (existingUser && !isReset) {
       return res.status(400).json({ error: 'L\'email è già registrata.' });
+    }
+    if (!existingUser && isReset) {
+      return res.status(400).json({ error: 'L\'email non è registrata' });
     }
 
     const mailOptions = {
@@ -42,25 +46,6 @@ const sendVerificationEmail = async (req, res, next) => {
     //res.status(500).json({ error: error.message });
   }
 };
-
-const sendPasswordResetEmail = async (to, token) => {
-  try {
-    const mailOptions = {
-      from: process.env.EMAIL_USER,
-      to: to,
-      subject: 'Recupero Password',
-      text: `Hai richiesto il recupero della password. Utilizza il seguente link per reimpostare la tua password: http://tuo-sito.com/reset-password?token=${token}`,
-    };
-
-    await transporter.sendMail(mailOptions);
-    console.log('Email di recupero password inviata a: ' + to);
-  } catch (error) {
-    console.error('Errore nell\'invio dell\'email di recupero password:', error);
-    throw new Error('Errore nell\'invio dell\'email di recupero password.');
-  }
-};
-
 module.exports = {
   sendVerificationEmail,
-  sendPasswordResetEmail,
 };

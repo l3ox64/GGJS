@@ -154,6 +154,9 @@ const Register = () => {
                 {error && <p style={{ color: 'red' }}>{error}</p>}
                 </Form>
             </Row>
+            <p>
+        Ti sei già registrato? <a href="/login">Accedi qui</a>.
+      </p>
       </Container>
       
       

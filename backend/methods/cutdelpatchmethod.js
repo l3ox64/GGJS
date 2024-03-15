@@ -1,17 +1,33 @@
 const { GGUser } = require('../models/GGUserSchema');
 const { createLog } = require('./internalmethod');
+const bcrypt = require('bcrypt');
 
 const updateUser = async (req, res, next) => {
   try {
-    const updatedUser = await GGUser.findOneAndUpdate({ Email_utente: req.params.email }, req.body, { new: true });
-    await createLog(updatedUser, req, 'updateUser', 200, 'info', updatedUser, null);
+    const userEmail = req.params.email;
+    const updateFields = req.body;
+    
+    if (updateFields.hasOwnProperty('Pw_utente')) {
+      const hashedPassword = await bcrypt.hash(updateFields.Pw_utente, 10);
+      updateFields.Pw_utente = hashedPassword;
+    }
+    const updatedUser = await GGUser.findOneAndUpdate({ Email_utente: userEmail }, updateFields, { new: true });
+    if (!updatedUser) {
+      return res.status(404).json({ message: "Utente non trovato" });
+    }
+    
+    // Aggiorna i campi di log solo se ci sono modifiche effettuate
+    if (Object.keys(updateFields).length > 0) {
+      await createLog(updatedUser, req, 'updateUser', 200, 'info', updateFields, null);
+    }
+    
     res.json(updatedUser);
   } catch (error) {
     console.error(error);
     next(error);
-    //res.status(500).json({ error: error.message });
   }
 };
+
 
 const deleteUser = async (req, res, next) => {
   try {
