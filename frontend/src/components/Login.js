@@ -36,12 +36,12 @@ const Login = () => {
 
   const handleLogin = async (e) => {
     e.preventDefault();
-
+  
     try {
       if (!isValidEmail(email)) {
         throw new Error('L\'email deve avere il dominio "@giorgimi.edu.it".');
       }
-
+  
       const response = await fetch('http://localhost:3001/api/login', {
         method: 'POST',
         headers: {
@@ -49,28 +49,27 @@ const Login = () => {
         },
         body: JSON.stringify({ Email_utente: email, Pw_utente: password }),
       });
-
+  
       if (!response.ok) {
         const responseData = await response.json();
         throw new Error(responseData.error || 'Errore durante l\'accesso. Riprova.');
       }
-
+  
       setError(null);
-
+  
       if (rememberMe) { // Se l'utente ha selezionato "Remember Me", memorizza l'email
-        setAuthCookie(1);
+        await setAuthCookie(email, true);
         localStorage.setItem('rememberedEmail', email);
       } else { // Altrimenti rimuovi l'email memorizzata (se presente)
         localStorage.removeItem('rememberedEmail');
-        setAuthCookie(0);
+        await setAuthCookie(email, false);
       }
-
+  
       window.location.href = '/main';
-
+  
     } catch (error) {
       setError(error.message);
     }
-
   };
 
   return (

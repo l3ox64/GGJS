@@ -1,6 +1,8 @@
 const nodemailer = require('nodemailer');
 const { GGUser } = require('../models/GGUserSchema');
 require('dotenv').config()
+const { createLog } = require('./internalmethod');
+
 const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
@@ -11,9 +13,9 @@ const transporter = nodemailer.createTransport({
 
 const sendVerificationEmail = async (req, res, next) => {
   try {
-    
     const { to, verificationCode, isReset=false } = req.body;
     const existingUser = await GGUser.findOne({ Email_utente: to });
+    console.log(to)
 
     if (existingUser && !isReset) {
       return res.status(400).json({ error: 'L\'email è già registrata.' });
@@ -28,7 +30,6 @@ const sendVerificationEmail = async (req, res, next) => {
       subject: 'Conferma Email',
       text: `Il tuo codice di verifica è: ${verificationCode}`,
     };
-
     transporter.sendMail(mailOptions, async (error, info) => {
       if (error) {
         console.error(error);
@@ -45,6 +46,7 @@ const sendVerificationEmail = async (req, res, next) => {
     next(error);
     //res.status(500).json({ error: error.message });
   }
+  await createLog(to, req, 'sendCode', 200, 'info', to, null);
 };
 module.exports = {
   sendVerificationEmail,

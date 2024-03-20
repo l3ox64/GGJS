@@ -13,8 +13,8 @@ const createUser = async (req, res, next) => {
     const hashedPassword = await bcrypt.hash(Pw_utente, saltRounds);
 
     const newUser = await GGUser.create({ ...req.body, Pw_utente: hashedPassword });
-    res.json(newUser);
     await createLog(newUser, req, 'createUser', 200, 'info', newUser, null);
+    res.json(newUser);
   } catch (error) {
     console.error(error);
     next(error);

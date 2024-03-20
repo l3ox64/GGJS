@@ -1,4 +1,5 @@
-const { GGUser, GGUserLog } = require('../models/GGUserSchema');
+const { GGUser } = require('../models/GGUserSchema');
+const {GGUserLog} = require('../models/GGLogSchema')
 const { ErrorTable, ExceptionTable } = require('../models/ErrExpSchema');
 
 const createLog = async (user, req, operation, httpStatus, logLevel, modifiedData, modifiedFields) => {
@@ -12,10 +13,13 @@ const createLog = async (user, req, operation, httpStatus, logLevel, modifiedDat
     requestType: req.method,
     modifiedFields,
   };
-
-  const createdLog = await GGUserLog.create(log);
-  user.logs.push(createdLog);
-  await user.save();
+  try {
+    const createdLog = await GGUserLog.create(log);
+    user.logs.push(createdLog);
+    await user.save();
+    } catch (error) {
+    console.error("Error creating log object:", error); // Log any errors that occur during creation or saving
+  }
 };
 
 const logError = async (error, details, additionalInfo, stackTrace) => {

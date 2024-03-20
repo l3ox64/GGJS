@@ -11,8 +11,6 @@ const GGUserLogSchema = new mongoose.Schema({
   modifiedFields: [String],
 });
 
-module.exports = mongoose.model('GGUserLog', GGUserLogSchema);
-
 const PerformanceLogSchema = new mongoose.Schema({
   date: { type: Date, default: new Date() },
   operation: String,
@@ -30,4 +28,7 @@ const PerformanceLogSchema = new mongoose.Schema({
   slowQueries: Number,
 });
 
-module.exports = mongoose.model('PerformanceLog', PerformanceLogSchema);
+module.exports = {
+  PerformanceLog: mongoose.model('PerformanceLog', PerformanceLogSchema),
+  GGUserLog: mongoose.model('GGUserLog', GGUserLogSchema)
+};

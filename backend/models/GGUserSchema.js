@@ -25,6 +25,7 @@ const GGUserSchema = new mongoose.Schema({
   Dt_utente_modifica_utente: { type: Date, default: null },
   Flg_segretario_utente: { type: Boolean, default: null },
   Flg_richiesta_pin: { type: Boolean, default: null },
+  isAdmin: { type: Boolean, default: false},
   logs: [{ type: mongoose.Schema.Types.ObjectId, ref: 'GGUserLog' }]
 
 }, { collection: 'GG_Tab_anagrafe_utenti' });
