@@ -5,7 +5,6 @@ const { ErrorTable, ExceptionTable } = require('../models/ErrExpSchema');
 const createLog = async (user, req, operation, httpStatus, logLevel, modifiedData, modifiedFields) => {
   const log = {
     date: new Date(),
-    ip: req.ip,
     operation,
     httpStatus,
     logLevel,
