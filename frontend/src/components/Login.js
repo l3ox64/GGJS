@@ -10,7 +10,6 @@ const Login = () => {
   const [error, setError] = useState(null);
   const [isEmailValid, setIsEmailValid] = useState(true);
   const [rememberMe, setRememberMe] = useState(false); // State per "Remember Me"
-  // Effetto per controllare se l'utente ha già effettuato l'accesso tramite "Remember Me"
   useEffect(() => {
     const rememberedEmail = localStorage.getItem('rememberedEmail');
     if (rememberedEmail) {
@@ -56,10 +55,10 @@ const Login = () => {
   
       setError(null);
   
-      if (rememberMe) { // Se l'utente ha selezionato "Remember Me", memorizza l'email
+      if (rememberMe) {
         await setAuthCookie(email, true);
         localStorage.setItem('rememberedEmail', email);
-      } else { // Altrimenti rimuovi l'email memorizzata (se presente)
+      } else {
         localStorage.removeItem('rememberedEmail');
         await setAuthCookie(email, false);
       }

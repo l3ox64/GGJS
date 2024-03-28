@@ -5,17 +5,14 @@ import { v4 as uuidv4 } from 'uuid';
 import sha512 from 'crypto-js/sha512';
 import encHex from 'crypto-js/enc-hex';
 
-// Funzione per generare un token di sessione dinamico
 const generateSessionToken = () => {
   return uuidv4();
 };
 
-// Funzione per calcolare l'hash dei dati del cookie con salting
 const computeHash = (data, salt) => {
   return sha512(data + salt).toString(encHex);
 };
 
-// Funzione per generare un salt casuale
 const generateSalt = () => {
   return uuidv4();
 };
@@ -40,11 +37,10 @@ export const setAuthCookie = async (email, rememberMe) => {
         isAdmin: userData.isAdmin
       });
 
-      const sessionToken = generateSessionToken(); // Genera un nuovo token di sessione
-      const salt = generateSalt(); // Genera un salt casuale
-      const hash = computeHash(serializedUserData, salt); // Calcola l'hash con salting
+      const sessionToken = generateSessionToken(); 
+      const salt = generateSalt();
+      const hash = computeHash(serializedUserData, salt); 
 
-      // Imposta il cookie con l'hash e il token di sessione
       Cookies.set('user', serializedUserData + '|' + sessionToken + '|' + salt + '|' + hash, { 
         expires: rememberMe ? 30 : null,
       });

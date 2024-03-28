@@ -1,10 +1,10 @@
 import React from 'react';
 import NavBar from '../components/NavBar';
-import { isAuthCookie, removeAuthCookie, getAuthDataFromCookie } from '../components/Cookie'; // Import getAuthDataFromCookie function
+import { isAuthCookie, removeAuthCookie, getAuthDataFromCookie } from '../components/Cookie'; 
 
 
 export default function MainPage() {
-  const userData = getAuthDataFromCookie(); // Retrieve user data string from cookie
+  const userData = getAuthDataFromCookie(); 
   if (!isAuthCookie()) {
     window.location.assign('/Login');
     return null;
