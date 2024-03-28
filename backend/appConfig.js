@@ -60,18 +60,15 @@ const configureApp = (app) => {
   };
   app.use(cors(corsOptions));
 
-  const limiter = rateLimit({
-    windowMs: 15 * 60 * 1000,
-    max: 10000,
-  });
-  app.use('/api/', limiter);
 
   app.use((req, res, next) => {
     console.log(`${req.method} ${req.originalUrl}`);
     next();
   });
-  const routes = require('./routes');
-  app.use('/api', routes);
+  const {router, help} = require('./routes');
+  app.use('/api', router);
+  app.use('/',help);
+
 };
 const runTestWithTiming = () => {
   testWithTiming({}, {

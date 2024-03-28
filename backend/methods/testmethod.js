@@ -1,6 +1,6 @@
 const now = require('performance-now');
 const { GGUser } = require('../models/GGUserSchema');
-const PerformanceLog = require('../models/GGLogSchema');
+const {PerformanceLog} = require('../models/GGLogSchema');
 const { MongoClient } = require('mongodb');
 const os = require('os-utils');
 //const { ExceptionTable } = require('../models/ErrExpSchema');

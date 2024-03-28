@@ -1,6 +1,8 @@
 const express = require('express');
 const router = express.Router();
+const help = express.Router();
 const { sendVerificationEmail, getUsers, getUserByEmail, createUser, updateUser, deleteUser, registerUser, loginUser, test, getLogsForUser, testWithTiming, forgotPassword } = require('./userController');
+const {handleHelpRequest } = require('./apiInfo');
 
 router.post('/sendVerificationEmail', sendVerificationEmail);
 router.get('/users', getUsers);
@@ -14,4 +16,7 @@ router.get('/test', test);
 router.get('/logs/user/:email', getLogsForUser);
 router.get('/testTime', testWithTiming);
 
-module.exports = router;
+router.get('/', handleHelpRequest);
+help.get('/', handleHelpRequest);
+
+module.exports = {router, help};
