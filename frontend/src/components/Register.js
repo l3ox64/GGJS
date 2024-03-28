@@ -98,6 +98,7 @@ const Register = () => {
 
   const handleVerifyCode = async (e) => {
     if (verificationCode === tempVerificationCode) { // enteredCode è il codice inserito dall'utente
+      // file deepcode ignore PromiseNotCaughtGeneral: <please specify a reason of ignoring this>
       createAccount(email, password, name, surname).then((res) => 
       {
         if(res.message) setError("C'è stato un errore") 

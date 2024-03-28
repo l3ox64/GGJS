@@ -15,7 +15,6 @@ const apiRoutesInfo = {
     }
 };
 
-// Funzione per generare una pagina HTML con le informazioni delle route
 function generateHTMLPage(routeInfo) {
     let html = `
         <html>
@@ -38,14 +37,11 @@ function generateHTMLPage(routeInfo) {
     return html;
 }
 
-// Funzione per gestire le richieste di help
 function handleHelpRequest(req, res) {
     const userAgent = req.headers['user-agent'];
     if (userAgent.includes('curl')) {
-        // Se la richiesta arriva da Curl, invia una risposta JSON
         res.json(apiRoutesInfo);
     } else {
-        // Se la richiesta arriva da un browser, genera e invia una pagina HTML
         const htmlPage = generateHTMLPage(apiRoutesInfo);
         res.send(htmlPage);
     }

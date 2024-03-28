@@ -10,7 +10,6 @@ const Login = () => {
   const [error, setError] = useState(null);
   const [isEmailValid, setIsEmailValid] = useState(true);
   const [rememberMe, setRememberMe] = useState(false); // State per "Remember Me"
-
   // Effetto per controllare se l'utente ha già effettuato l'accesso tramite "Remember Me"
   useEffect(() => {
     const rememberedEmail = localStorage.getItem('rememberedEmail');

@@ -1,4 +1,24 @@
+//Asaasa12!
+
 import Cookies from 'js-cookie';
+import { v4 as uuidv4 } from 'uuid';
+import sha512 from 'crypto-js/sha512';
+import encHex from 'crypto-js/enc-hex';
+
+// Funzione per generare un token di sessione dinamico
+const generateSessionToken = () => {
+  return uuidv4();
+};
+
+// Funzione per calcolare l'hash dei dati del cookie con salting
+const computeHash = (data, salt) => {
+  return sha512(data + salt).toString(encHex);
+};
+
+// Funzione per generare un salt casuale
+const generateSalt = () => {
+  return uuidv4();
+};
 
 export const setAuthCookie = async (email, rememberMe) => {
   try {
@@ -20,7 +40,14 @@ export const setAuthCookie = async (email, rememberMe) => {
         isAdmin: userData.isAdmin
       });
 
-      Cookies.set('user', serializedUserData, { expires: rememberMe ? 30 : null });
+      const sessionToken = generateSessionToken(); // Genera un nuovo token di sessione
+      const salt = generateSalt(); // Genera un salt casuale
+      const hash = computeHash(serializedUserData, salt); // Calcola l'hash con salting
+
+      // Imposta il cookie con l'hash e il token di sessione
+      Cookies.set('user', serializedUserData + '|' + sessionToken + '|' + salt + '|' + hash, { 
+        expires: rememberMe ? 30 : null,
+      });
     } else {
       throw new Error('User data is not in the expected format');
     }
@@ -31,7 +58,14 @@ export const setAuthCookie = async (email, rememberMe) => {
 
 export const getAuthDataFromCookie = () => {
   const userData = Cookies.get('user');
-  return userData ? JSON.parse(userData) : null;
+  if (userData) {
+    const [serializedUserData, sessionToken, salt, hash] = userData.split('|');
+    // Verifica l'integrità del cookie calcolando l'hash e confrontandolo con quello memorizzato
+    if (computeHash(serializedUserData, salt) === hash) {
+      return JSON.parse(serializedUserData);
+    }
+  }
+  return null;
 };
 
 export const isAuthCookie = () => {

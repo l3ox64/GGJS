@@ -5,7 +5,6 @@ import { isAuthCookie, removeAuthCookie, getAuthDataFromCookie } from '../compon
 
 export default function MainPage() {
   const userData = getAuthDataFromCookie(); // Retrieve user data string from cookie
-
   if (!isAuthCookie()) {
     window.location.assign('/Login');
     return null;
